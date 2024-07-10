@@ -206,7 +206,7 @@ std::vector<std::pair<Course, std::pair<TimeSlot, Instructor>>> University::sche
     double minTemperature = 1.0; //so that the algorithm terminates when the probability of making worse decisions becomes very low
 
     auto bestSchedule = currentSchedule;
-    double bestCost = evaluateCost(bestSchedule);
+    double bestCost = calculateScheduleCost(bestSchedule);
 
     while (temperature > minTemperature) {
         //we create a new "candidate" schedule by making a small change to the current schedule
@@ -218,7 +218,7 @@ std::vector<std::pair<Course, std::pair<TimeSlot, Instructor>>> University::sche
 
         //calculate the cost of the new schedule
         double currentCost = calculateScheduleCost(currentSchedule);
-        double newCost = calculateScheduleCostt(newSchedule);
+        double newCost = calculateScheduleCost(newSchedule);
 
         //decide whether to accept the new schedule
         if (newCost < currentCost || std::exp((currentCost - newCost) / temperature) > (double) std::rand() / RAND_MAX) {
