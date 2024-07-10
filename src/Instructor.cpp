@@ -27,11 +27,11 @@ std::vector<Course> Instructor::getPreferredCourses() const{
     return this->preferredCourses;
 }
 
-void Instructor::addPreferredTimeSlot(TimeSlot timeSlot){
+void Instructor::addPreferredTimeSlot(TimeSlot& timeSlot){
     this->availability.push_back(timeSlot);
 }
 
-void Instructor::addPreferredCourse(Course course){
+void Instructor::addPreferredCourse(Course& course){
     this->preferredCourses.push_back(course);
 }
 

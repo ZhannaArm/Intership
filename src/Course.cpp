@@ -12,7 +12,7 @@ void Course::displayInfo() const{
     }
 }
 
-void Course::addPreferredTimeSlot(TimeSlot preferredTimeSlot) {
+void Course::addPreferredTimeSlot(TimeSlot& preferredTimeSlot) {
     this->preferredTimeSlots.push_back(preferredTimeSlot);
 }
 

@@ -65,9 +65,9 @@ public:
 
     void displayInfo() const;
 
-    void addPreferredTimeSlot(TimeSlot timeSlot);
+    void addPreferredTimeSlot(TimeSlot& timeSlot);
 
-    void addPreferredCourse(Course course);
+    void addPreferredCourse(Course& course);
 
     std::string getName() const;
 

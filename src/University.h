@@ -56,10 +56,16 @@
  *
  * @method schedule
  * @brief Creates a schedule mapping courses to instructors and time slots.
- * @return A University schedule
+ * @return A University schedule.
+ *
+ * @method schedule_bruteForce
+ * @brief Creates a schedule mapping courses using an algorithm brute force to instructors and time slots.
  *
  * @function displaySchedule
- * @brief Displays the current course schedule.
+ * @brief Displays the current course schedule from std::vector<std::pair<Course, std::pair<TimeSlot, Instructor>>> Schedule.
+ *
+ * @function displayScheduleMap
+ * @brief Displays the current course schedule from std::map<Course, std::pair<Instructor, TimeSlot>> scheduleMap.
  */
 class University {
 private:
@@ -67,9 +73,8 @@ private:
     std::vector<Instructor> instructors;
     std::vector<TimeSlot> timeSlots;
     std::vector<std::pair<Course, std::pair<TimeSlot, Instructor>>> Schedule;
-
-    //for bad algorithm
-    //std::map<Course, std::pair<Instructor, TimeSlot>> scheduleMap;
+    //for brute force algorithm
+    std::map<Course, std::pair<Instructor, TimeSlot>> scheduleMap;
 
     static double calculateScheduleCost(const std::vector<std::pair<Course, std::pair<TimeSlot, Instructor>>>& schedule);
 public:
@@ -93,7 +98,11 @@ public:
 
     std::vector<std::pair<Course, std::pair<TimeSlot, Instructor>>> schedule();
 
+    void schedule_bruteForce();
+
     void displaySchedule() const;
+
+    void displayScheduleMap() const;
 };
 
 #endif

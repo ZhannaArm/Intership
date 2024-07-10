@@ -56,7 +56,7 @@ public:
 
     void displayInfo() const;
 
-    void addPreferredTimeSlot(TimeSlot preferredTimeSlot);
+    void addPreferredTimeSlot(TimeSlot& preferredTimeSlot);
 
     std::vector<TimeSlot> getPreferredTimeSlots() const;
 

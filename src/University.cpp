@@ -119,48 +119,48 @@ void University::displayInfo() const {
     std::cout << std::endl;
 }
 
-//bad algorithm for a large number of time slots, courses and instructors7
-//void University::schedule() {
-//    for (const auto& course : courses) {
-//        bool scheduled = false; //flag planned successfully planned course
-//        for (const auto& preferredTimeSlot : course.getPreferredTimeSlots()) { //for each course we cover all preferred course time slots
-//            for (const auto& instructor : instructors) {
-//                //we check if any of the teachers are available at this time and if the course is on the teacher's list of preferred courses
-//                if (std::find(instructor.getAvailability().begin(), instructor.getAvailability().end(), preferredTimeSlot) != instructor.getAvailability().end() &&
-//                    std::find(instructor.getPreferredCourses().begin(), instructor.getPreferredCourses().end(), course) != instructor.getPreferredCourses().end()) {
-//                    if (scheduleMap.find(course) == scheduleMap.end()) { //if the course has not yet been added to the schedule
-//                        scheduleMap[course] = std::make_pair(instructor, preferredTimeSlot);
-//                        scheduled = true;
-//                        break;
-//                    }
-//                }
-//            }
-//            if (scheduled){
-//                break;
-//            }
-//        }
-//
-//        //assign a course to any available time slots if preferences are not met
-//        if (!scheduled) {
-//            for (const auto& timeSlot : timeSlots) {
-//                for (const auto& instructor : instructors) {
-//                    if (std::find(instructor.getAvailability().begin(), instructor.getAvailability().end(), timeSlot) != instructor.getAvailability().end()) {
-//                        if (scheduleMap.find(course) == scheduleMap.end()) {
-//                            scheduleMap[course] = scheduleMap[course] = std::make_pair(instructor, timeSlot);
-//                            scheduled = true;
-//                            break;
-//                        }
-//                    }
-//                }
-//                if (scheduled) {
-//                    break;
-//                }
-//            }
-//        }
-//    }
-//}
+//brute force algorithm for a large number of time slots, courses and instructors
+void University::schedule_bruteForce() {
+    for (const auto& course : courses) {
+        bool scheduled = false; //flag planned successfully planned course
+        for (const auto& preferredTimeSlot : course.getPreferredTimeSlots()) { //for each course we cover all preferred course time slots
+            for (const auto& instructor : instructors) {
+                //we check if any of the teachers are available at this time and if the course is on the teacher's list of preferred courses
+                if (std::find(instructor.getAvailability().begin(), instructor.getAvailability().end(), preferredTimeSlot) != instructor.getAvailability().end() &&
+                    std::find(instructor.getPreferredCourses().begin(), instructor.getPreferredCourses().end(), course) != instructor.getPreferredCourses().end()) {
+                    if (scheduleMap.find(course) == scheduleMap.end()) { //if the course has not yet been added to the schedule
+                        scheduleMap[course] = std::make_pair(instructor, preferredTimeSlot);
+                        scheduled = true;
+                        break;
+                    }
+                }
+            }
+            if (scheduled){
+                break;
+            }
+        }
 
-//function to evaluate the cost of the current schedule
+        //assign a course to any available time slots if preferences are not met
+        if (!scheduled) {
+            for (const auto& timeSlot : timeSlots) {
+                for (const auto& instructor : instructors) {
+                    if (std::find(instructor.getAvailability().begin(), instructor.getAvailability().end(), timeSlot) != instructor.getAvailability().end()) {
+                        if (scheduleMap.find(course) == scheduleMap.end()) {
+                            scheduleMap[course] = scheduleMap[course] = std::make_pair(instructor, timeSlot);
+                            scheduled = true;
+                            break;
+                        }
+                    }
+                }
+                if (scheduled) {
+                    break;
+                }
+            }
+        }
+    }
+}
+
+//function to evaluate the cost of the current schedule (for simulated Annealing algorithm)
 double University::calculateScheduleCost(const std::vector<std::pair<Course, std::pair<TimeSlot, Instructor>>>& schedule) {
     double cost = 0.0;
     for (const auto& entry : schedule) {
@@ -246,11 +246,11 @@ void University::displaySchedule() const{
     }
 }
 
-//for bad algorithm
-//void University::displaySchedule() const {
-//    std::cout << "Schedule:" << std::endl;
-//    for (const auto& entry : scheduleMap) {
-//        std::cout << "Course: " << entry.first.getCourseName() << " | Instructor: " << entry.second.first.getName() << " | TimeSlot: ";
-//        entry.second.second.displayInfo();
-//    }
-//}
+//for brute force algorithm
+void University::displayScheduleMap() const {
+    std::cout << "Schedule:" << std::endl;
+    for (const auto& entry : scheduleMap) {
+        std::cout << "Course: " << entry.first.getCourseName() << " | Instructor: " << entry.second.first.getName() << " | TimeSlot: ";
+        entry.second.second.displayInfo();
+    }
+}
