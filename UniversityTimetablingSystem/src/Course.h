@@ -52,7 +52,7 @@ private:
 public:
     Course() = default;
 
-    Course(std::string courseName, std::vector<TimeSlot> preferredTimeSlots);
+    Course(std::string course_name, std::vector<TimeSlot> preferred_time_slots);
 
     void displayInfo() const;
 

@@ -54,6 +54,7 @@
  * @function displayInfo
  * @brief Displays the information of the university.
  *
+ * I have two solutions for schedule planning(main algorithm - schedule, brute force algorithm - schedule_bruteForce)
  * @method schedule
  * @brief Creates a schedule mapping courses to instructors and time slots.
  * @return A University schedule.
@@ -98,7 +99,7 @@ public:
 
     std::vector<std::pair<Course, std::pair<TimeSlot, Instructor>>> schedule();
 
-    void schedule_bruteForce();
+    void schedule_bruteForce(); //the second solution
 
     void displaySchedule() const;
 

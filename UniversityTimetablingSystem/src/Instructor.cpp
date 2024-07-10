@@ -1,9 +1,9 @@
 #include "Instructor.h"
 
-Instructor::Instructor(std::string name, std::vector<TimeSlot> availability, std::vector<Course> preferredCourses)
-        : name(name), availability(availability), preferredCourses(preferredCourses) {}
+Instructor::Instructor(std::string name_, std::vector<TimeSlot> availability_, std::vector<Course> preferred_courses)
+        : name(name_), availability(availability_), preferredCourses(preferred_courses) {}
 
-void Instructor::displayInfo() const{
+void Instructor::displayInfo() const {
     std::cout << "Instructor Name: " << name << std::endl;
     std::cout << "Availability:" << std::endl;
     for (const auto& timeSlot : availability) {
@@ -15,15 +15,15 @@ void Instructor::displayInfo() const{
     }
 }
 
-std::string Instructor::getName() const{
+std::string Instructor::getName() const {
     return this->name;
 }
 
-std::vector<TimeSlot> Instructor::getAvailability() const{
+std::vector<TimeSlot> Instructor::getAvailability() const {
     return this->availability;
 }
 
-std::vector<Course> Instructor::getPreferredCourses() const{
+std::vector<Course> Instructor::getPreferredCourses() const {
     return this->preferredCourses;
 }
 

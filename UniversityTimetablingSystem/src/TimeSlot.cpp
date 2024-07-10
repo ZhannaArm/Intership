@@ -1,21 +1,21 @@
 #include "TimeSlot.h"
 
-TimeSlot::TimeSlot(std::string day, std::string startTime, std::string endTime)
-            : day(day), startTime(startTime), endTime(endTime) {}
+TimeSlot::TimeSlot(std::string day_, std::string start_time, std::string end_time)
+            : day(day_), startTime(start_time), endTime(end_time) {}
 
 void TimeSlot::displayInfo() const {
         std::cout << "Day: " << day << ", Start Time: " << startTime << ", End Time: " << endTime << std::endl;
     }
 
-std::string TimeSlot::getDay() const{
+std::string TimeSlot::getDay() const {
     return this->day;
 }
 
-std::string TimeSlot::getStartTime() const{
+std::string TimeSlot::getStartTime() const {
     return this->startTime;
 }
 
-std::string TimeSlot::getEndTime() const{
+std::string TimeSlot::getEndTime() const {
     return this->endTime;
 }
 

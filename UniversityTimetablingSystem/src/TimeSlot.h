@@ -48,7 +48,7 @@ private:
 public:
     TimeSlot() = default;
 
-    TimeSlot(std::string day, std::string startTime, std::string endTime);
+    TimeSlot(std::string day_, std::string start_time, std::string end_time);
 
     void displayInfo() const;
 

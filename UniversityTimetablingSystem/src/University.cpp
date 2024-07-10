@@ -12,15 +12,15 @@ void University::addTimeSlot(const TimeSlot& timeSlot) {
     timeSlots.push_back(timeSlot);
 }
 
-std::vector<TimeSlot> University::getTimeSlots() const{
+std::vector<TimeSlot> University::getTimeSlots() const {
     return this->timeSlots;
 }
 
-std::vector<Instructor> University::getInstructors() const{
+std::vector<Instructor> University::getInstructors() const {
     return this->instructors;
 }
 
-std::vector<Course> University::getCourses() const{
+std::vector<Course> University::getCourses() const {
     return this->courses;
 }
 
@@ -48,7 +48,6 @@ void University::saveState(const std::string& filename) {
     }
     else {
         std::cerr << "Unable to open file for writing: " << filename << std::endl;
-        //or throw std::runtime_error("Unable to open file for writing: " + filename);
     }
 }
 
@@ -96,7 +95,6 @@ void University::loadState(const std::string& filename) {
     }
     else {
         std::cerr << "Unable to open file for reading: " << filename << std::endl;
-        //or throw std::runtime_error("Unable to open file for reading: " + filename);
     }
 }
 
@@ -190,7 +188,7 @@ double University::calculateScheduleCost(const std::vector<std::pair<Course, std
 //Simulated Annealing algorithm to schedule courses
 std::vector<std::pair<Course, std::pair<TimeSlot, Instructor>>> University::schedule() {
     //we initialize random seed
-    std::srand(std::time(0));
+    std::srand(std::time(nullptr));
 
     //initial schedule (random assignment)
     std::vector<std::pair<Course, std::pair<TimeSlot, Instructor>>> currentSchedule;
@@ -201,8 +199,8 @@ std::vector<std::pair<Course, std::pair<TimeSlot, Instructor>>> University::sche
     }
 
     //parameters for simulated annealing
-    double temperature = 1000.0; //temperature allows for many combinations
-    double coolingRate = 0.003; //moderately low to give the algorithm enough time to find the optimal solution
+    double temperature = 1200.0; //temperature allows for many combinations
+    double coolingRate = 0.005; //moderately low to give the algorithm enough time to find the optimal solution
     double minTemperature = 1.0; //so that the algorithm terminates when the probability of making worse decisions becomes very low
 
     auto bestSchedule = currentSchedule;
@@ -220,7 +218,8 @@ std::vector<std::pair<Course, std::pair<TimeSlot, Instructor>>> University::sche
         double currentCost = calculateScheduleCost(currentSchedule);
         double newCost = calculateScheduleCost(newSchedule);
 
-        //decide whether to accept the new schedule
+        //decide whether to accept the new schedule(If the new schedule has a lower cost, it is always accepted,
+        // otherwise the decision is made with a probability determined by the function std::exp...)
         if (newCost < currentCost || std::exp((currentCost - newCost) / temperature) > (double) std::rand() / RAND_MAX) {
             currentSchedule = newSchedule;
         }
@@ -239,7 +238,7 @@ std::vector<std::pair<Course, std::pair<TimeSlot, Instructor>>> University::sche
     return bestSchedule; //I do this for google tests
 }
 
-void University::displaySchedule() const{
+void University::displaySchedule() const {
     std::cout << "SCHEDULE:" << std::endl;
     for (const auto& entry : Schedule) {
         std::cout << "Course: " << entry.first.getCourseName() << ", Time Slot: " << entry.second.first.getDay() << " " << entry.second.first.getStartTime() << "-" << entry.second.first.getEndTime() << ", Instructor: " << entry.second.second.getName() << std::endl;

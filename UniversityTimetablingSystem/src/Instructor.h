@@ -61,7 +61,7 @@ private:
 public:
     Instructor() = default;
 
-    Instructor(std::string name, std::vector<TimeSlot> availability, std::vector<Course> preferredCourses);
+    Instructor(std::string name_, std::vector<TimeSlot> availability_, std::vector<Course> preferred_courses);
 
     void displayInfo() const;
 

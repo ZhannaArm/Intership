@@ -45,7 +45,7 @@ int main() {
     university.addTimeSlot(ts4);
     university.addTimeSlot(ts5);
 
-    //university.displayInfo();
+    //university.displayInfo(); //function to see all information about the university
     university.saveState("rau_state.json");
     university.loadState("rau_state.json");
     auto schedule = university.schedule();
