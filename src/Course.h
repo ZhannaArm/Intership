@@ -1,5 +1,5 @@
-#ifndef COURSE_H
-#define COURSE_H
+#ifndef UNIVERSITY_TIMETABLING_SYSTEM_COURSE_H
+#define UNIVERSITY_TIMETABLING_SYSTEM_COURSE_H
 #include <string>
 #include <vector>
 #include "TimeSlot.h"

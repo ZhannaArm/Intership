@@ -1,5 +1,5 @@
-#ifndef INTERSHIP_UNIVERSITY_H
-#define INTERSHIP_UNIVERSITY_H
+#ifndef UNIVERSITY_TIMETABLING_SYSTEM_UNIVERSITY_H
+#define UNIVERSITY_TIMETABLING_SYSTEM_UNIVERSITY_H
 #include <iostream>
 #include "/usr/local/opt/nlohmann-json/include/nlohmann/json.hpp"
 #include <string>

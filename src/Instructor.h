@@ -1,5 +1,5 @@
-#ifndef INTERSHIP_INSTRUCTOR_H
-#define INTERSHIP_INSTRUCTOR_H
+#ifndef UNIVERSITY_TIMETABLING_SYSTEM_INSTRUCTOR_H
+#define UNIVERSITY_TIMETABLING_SYSTEM_INSTRUCTOR_H
 #include <iostream>
 #include <string>
 #include <vector>
