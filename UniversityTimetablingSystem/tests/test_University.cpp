@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
-#include "../src/TimeSlot.h"
-#include "../src/Course.h"
-#include "../src/Instructor.h"
-#include "../src/University.h"
+#include "../../src/TimeSlot.h"
+#include "../../src/Course.h"
+#include "../../src/Instructor.h"
+#include "../../src/University.h"
 
 //test for method addCourse
 TEST(UniversityTest, AddCourse) {

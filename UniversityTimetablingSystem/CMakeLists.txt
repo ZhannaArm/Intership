@@ -11,8 +11,8 @@ add_executable(intership src/main.cpp src/Course.cpp src/TimeSlot.cpp src/Instru
 target_link_libraries(intership PRIVATE nlohmann_json)
 
 # Add Google Test
-add_subdirectory(googletest)
-include_directories(googletest/googletest/include)
+add_subdirectory(../googletest)
+include_directories(../googletest/googletest/include)
 
 # Add test executable
 add_executable(runTests tests/test_University.cpp src/Course.cpp src/TimeSlot.cpp src/Instructor.cpp src/University.cpp src/University.h src/Course.h src/TimeSlot.h src/Instructor.h src/University.h)
