@@ -1,4 +1,4 @@
-#include "Instructor.h"
+#include "../include/Instructor.h"
 
 Instructor::Instructor(std::string name_, std::vector<TimeSlot> availability_, std::vector<Course> preferred_courses)
         : name(name_), availability(availability_), preferredCourses(preferred_courses) {}

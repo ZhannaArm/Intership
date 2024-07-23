@@ -1,0 +1,3 @@
+[submodule "UniversityTimetablingSystem/argparse"]
+	path = UniversityTimetablingSystem/argparse
+	url = https://github.com/jamolnng/argparse.git

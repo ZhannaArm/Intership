@@ -1,4 +1,4 @@
-#include "University.h"
+#include "../include/University.h"
 
 void University::addCourse(const Course& course) {
     courses.push_back(course);
