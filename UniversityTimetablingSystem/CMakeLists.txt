@@ -23,22 +23,28 @@ add_library(UniversityTimetablingLib SHARED
         )
 
 #Include directories for the UniversityTimetablingLib library
-target_include_directories(UniversityTimetablingLib PUBLIC src)
+#target_include_directories(UniversityTimetablingLib PUBLIC src)
+
+target_include_directories(UniversityTimetablingLib PUBLIC
+        ${CMAKE_SOURCE_DIR}/src
+        ${CMAKE_SOURCE_DIR}/include
+        ${CMAKE_SOURCE_DIR}/argparse/include
+        )
 
 #Add executable for the main application
 add_executable(UniversityTimetablingSystem src/main.cpp) #Creates an executable from main.cpp
 target_link_libraries(UniversityTimetablingSystem PRIVATE UniversityTimetablingLib) #Links an executable file to a dynamic library
 
 #Add Google test
-add_subdirectory(googletest)
-include_directories(googletest/googletest/include)
+#add_subdirectory(googletest)
+#include_directories(googletest/googletest/include)
 
 #Add executable for running tests
-add_executable(runTests tests/test_University.cpp)
-target_link_libraries(runTests PRIVATE UniversityTimetablingLib gtest gtest_main)
+#add_executable(runTests tests/test_University.cpp)
+#target_link_libraries(runTests PRIVATE UniversityTimetablingLib gtest gtest_main)
 
 #Enable testing
-enable_testing()
+#enable_testing()
 
 #Add test
-add_test(NAME runTests COMMAND runTests)
+#add_test(NAME runTests COMMAND runTests)

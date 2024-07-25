@@ -1,4 +1,4 @@
-#include "../include/Course.h"
+#include "Course.h"
 #include <iostream>
 
 Course::Course(std::string course_name, std::vector<TimeSlot> preferred_time_slots)

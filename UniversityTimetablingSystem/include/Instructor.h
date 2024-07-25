@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include "/usr/local/opt/nlohmann-json/include/nlohmann/json.hpp"
+#include "nlohmann/json.hpp"
 #include "Course.h"
 #include "TimeSlot.h"
 /*

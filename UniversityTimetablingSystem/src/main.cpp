@@ -1,10 +1,10 @@
 #include <iostream>
 #include <vector>
-#include "/Users/apple/intership/UniversityTimetablingSystem/argparse/argparse.h"
-#include "../include/TimeSlot.h"
-#include "../include/Course.h"
-#include "../include/Instructor.h"
-#include "../include/University.h"
+#include "../argparse/argparse.h"
+#include "TimeSlot.h"
+#include "Course.h"
+#include "Instructor.h"
+#include "University.h"
 
 //function to find a course by name in the university
 Course* findCourseByName(const std::string& courseName, University& university) {
