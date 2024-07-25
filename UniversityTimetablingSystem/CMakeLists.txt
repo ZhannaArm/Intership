@@ -8,11 +8,12 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 add_subdirectory(argparse)
 
 #Include directories for header files
-include_directories(${CMAKE_SOURCE_DIR}/argparse/include)
+include_directories(${CMAKE_SOURCE_DIR}/argparse)
+include_directories(${CMAKE_SOURCE_DIR}/nlohmann)
 
 #Include nlohmann-json library
-set(NLOHMANN_JSON_INCLUDE_DIR "/usr/local/opt/nlohmann-json/include")
-include_directories(${NLOHMANN_JSON_INCLUDE_DIR})
+#set(NLOHMANN_JSON_INCLUDE_DIR "/usr/local/opt/nlohmann-json/include")
+#include_directories(${NLOHMANN_JSON_INCLUDE_DIR})
 
 #Add source files for the UniversityTimetablingLib library
 add_library(UniversityTimetablingLib SHARED
@@ -23,12 +24,11 @@ add_library(UniversityTimetablingLib SHARED
         )
 
 #Include directories for the UniversityTimetablingLib library
-#target_include_directories(UniversityTimetablingLib PUBLIC src)
-
 target_include_directories(UniversityTimetablingLib PUBLIC
         ${CMAKE_SOURCE_DIR}/src
         ${CMAKE_SOURCE_DIR}/include
-        ${CMAKE_SOURCE_DIR}/argparse/include
+        ${CMAKE_SOURCE_DIR}/nlohmann
+        ${CMAKE_SOURCE_DIR}/argparse
         )
 
 #Add executable for the main application

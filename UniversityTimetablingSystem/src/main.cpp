@@ -1,6 +1,6 @@
 #include <iostream>
 #include <vector>
-#include "../argparse/argparse.h"
+#include "argparse.h"
 #include "TimeSlot.h"
 #include "Course.h"
 #include "Instructor.h"
