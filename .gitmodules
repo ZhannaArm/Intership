@@ -1,7 +1,15 @@
-[submodule "pybind11"]
+[submodule "UniversityTimetablingSystem/argparse"]
+	path = UniversityTimetablingSystem/argparse
+	url = https://github.com/jamolnng/argparse.git
+
+[submodule "UniversityTimetablingSystem/nlohmann"]
+	path = UniversityTimetablingSystem/nlohmann
+	url = https://github.com/nlohmann/json.git
+
+[submodule "UniversityTimetablingSystem/pybind11"]
 path = pybind11
 url = https://github.com/pybind/pybind11.git
 
-[submodule "googletest"]
+[submodule "UniversityTimetablingSystem/googletest"]
 path = googletest
 url = https://github.com/google/googletest.git
