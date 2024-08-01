@@ -50,15 +50,14 @@ This project is designed to create a timetable for university courses, assigning
 
 ### Building the Project
 
-To build the project, you need to have CMake installed. Run the following commands:
+To build the project, you need to have CMake installed. Run the provided `build.sh` script. This script supports three modes: `build`, `release`, and `debug`.
 
 ```sh
 git clone --recurse-submodules https://github.com/your-repository
 cd your-repository
-mkdir build
-cd build
-cmake ..
-make
+./build.sh build   # Build the project (default to Release mode)
+./build.sh release # Build the project in Release mode
+./build.sh debug   # Build the project in Debug mode
 ```
 ###Running the Project
 The project provides several commands to manage instructors, courses, and time slots, as well as to generate the schedule.

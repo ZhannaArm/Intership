@@ -24,6 +24,25 @@ std::vector<Course> University::getCourses() const {
     return this->courses;
 }
 
+bool University::courseExists(const std::string& courseName) const {
+    for (const auto& course : courses) {
+        if (course.getCourseName() == courseName) {
+            return true;
+        }
+    }
+    return false;
+}
+
+Course* University::getCourse(const std::string& courseName) const {
+    for (Course& course : this->getCourses()) {
+        if (course.getCourseName() == courseName) {
+            return &course;
+        }
+    }
+    return nullptr;
+    //throw std::runtime_error("Course not found");
+}
+
 void University::saveState(const std::string& filename) {
     json j;
     j["courses"] = json::array();
@@ -236,6 +255,17 @@ std::vector<std::pair<Course, std::pair<TimeSlot, Instructor>>> University::sche
 
     Schedule = bestSchedule;
     return bestSchedule; //I do this for google tests
+}
+
+std::vector<std::tuple<std::string, std::string, std::string>> University::scheduleToJsonFormat() const {
+    std::vector<std::tuple<std::string, std::string, std::string>> result;
+    for (const auto& entry : Schedule) {
+        std::string courseName = entry.first.getCourseName();
+        std::string timeSlot = entry.second.first.getDay() + " " + entry.second.first.getStartTime() + "-" + entry.second.first.getEndTime();
+        std::string instructorName = entry.second.second.getName();
+        result.emplace_back(courseName, timeSlot, instructorName);
+    }
+    return result;
 }
 
 void University::displaySchedule() const {

@@ -91,6 +91,10 @@ public:
 
     std::vector<Course> getCourses() const;
 
+    bool courseExists(const std::string& courseName) const;
+
+    Course* getCourse(const std::string& courseName) const;
+
     void saveState(const std::string& filename);
 
     void loadState(const std::string& filename);
@@ -98,6 +102,8 @@ public:
     void displayInfo() const;
 
     std::vector<std::pair<Course, std::pair<TimeSlot, Instructor>>> schedule();
+
+    std::vector<std::tuple<std::string, std::string, std::string>> scheduleToJsonFormat() const;
 
     void schedule_bruteForce(); //the second solution
 

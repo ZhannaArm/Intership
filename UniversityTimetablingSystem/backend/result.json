@@ -1,0 +1,45 @@
+{
+    "courses": [
+        {
+            "courseName": "Math",
+            "preferredTimeSlots": [
+                {
+                    "day": "Tuesday",
+                    "endTime": "10:30",
+                    "startTime": "09:00"
+                }
+            ]
+        }
+    ],
+    "instructors": [
+        {
+            "availability": [
+                {
+                    "day": "Tuesday",
+                    "endTime": "10:30",
+                    "startTime": "09:00"
+                }
+            ],
+            "name": "Sara",
+            "preferredCourses": [
+                {
+                    "courseName": "Math",
+                    "preferredTimeSlots": [
+                        {
+                            "day": "Tuesday",
+                            "endTime": "10:30",
+                            "startTime": "09:00"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "timeSlots": [
+        {
+            "day": "Tuesday",
+            "endTime": "10:30",
+            "startTime": "09:00"
+        }
+    ]
+}
