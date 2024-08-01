@@ -13,6 +13,3 @@
 [submodule "UniversityTimetablingSystem/googletest"]
 	path = UniversityTimetablingSystem/googletest
 	url = https://github.com/google/googletest.git
-[submodule "UniversityTimetablingSystem/UniversityTimetablingSystem/googletest"]
-	path = UniversityTimetablingSystem/UniversityTimetablingSystem/googletest
-	url = https://github.com/google/googletest.git
