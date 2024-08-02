@@ -27,15 +27,15 @@ cd build
 case "$build_type" in
     debug)
         echo "Building in debug mode..."
-        cmake -DCMAKE_BUILD_TYPE=Debug .
+        cmake -DCMAKE_BUILD_TYPE=Debug ..
         ;;
     release)
         echo "Building in release mode..."
-        cmake -DCMAKE_BUILD_TYPE=Release .
+        cmake -DCMAKE_BUILD_TYPE=Release ..
         ;;
     sanitize)
         echo "Building in sanitize mode..."
-        cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DSANITIZE=ON .
+        cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DSANITIZE=ON ..
         ;;
 esac
 
