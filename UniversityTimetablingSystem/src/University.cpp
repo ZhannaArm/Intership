@@ -13,15 +13,34 @@ void University::addTimeSlot(const TimeSlot& timeSlot) {
 }
 
 std::vector<TimeSlot> University::getTimeSlots() const {
-    return this->timeSlots;
+    return timeSlots;
 }
 
 std::vector<Instructor> University::getInstructors() const {
-    return this->instructors;
+    return instructors;
 }
 
 std::vector<Course> University::getCourses() const {
-    return this->courses;
+    return courses;
+}
+
+bool University::courseExists(const std::string& courseName) const {
+    for (const auto& course : courses) {
+        if (course.getCourseName() == courseName) {
+            return true;
+        }
+    }
+    return false;
+}
+
+const Course* University::getCourse(const std::string& courseName) const {
+    for (const auto& course : courses) {
+        if (course.getCourseName() == courseName) {
+            return &course;
+        }
+    }
+    return nullptr;
+    //throw std::runtime_error("Course not found");
 }
 
 void University::saveState(const std::string& filename) {

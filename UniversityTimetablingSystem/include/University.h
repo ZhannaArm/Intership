@@ -91,6 +91,10 @@ public:
 
     std::vector<Course> getCourses() const;
 
+    bool courseExists(const std::string& courseName) const;
+
+    const Course* getCourse(const std::string& courseName) const;
+
     void saveState(const std::string& filename);
 
     void loadState(const std::string& filename);

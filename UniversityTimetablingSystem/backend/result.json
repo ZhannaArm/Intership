@@ -1,0 +1,112 @@
+{
+    "courses": [
+        {
+            "courseName": "Literature",
+            "preferredTimeSlots": [
+                {
+                    "day": "Monday",
+                    "endTime": "12:00",
+                    "startTime": "10:00"
+                }
+            ]
+        },
+        {
+            "courseName": "Math",
+            "preferredTimeSlots": [
+                {
+                    "day": "Friday",
+                    "endTime": "17:00",
+                    "startTime": "16:00"
+                }
+            ]
+        },
+        {
+            "courseName": "Physics",
+            "preferredTimeSlots": [
+                {
+                    "day": "Friday",
+                    "endTime": "18:00",
+                    "startTime": "17:00"
+                }
+            ]
+        }
+    ],
+    "instructors": [
+        {
+            "availability": [
+                {
+                    "day": "Monday",
+                    "endTime": "12:00",
+                    "startTime": "10:00"
+                }
+            ],
+            "name": "Laura",
+            "preferredCourses": [
+                {
+                    "courseName": "Literature",
+                    "preferredTimeSlots": [
+                        {
+                            "day": "Monday",
+                            "endTime": "12:00",
+                            "startTime": "10:00"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "availability": [
+                {
+                    "day": "Friday",
+                    "endTime": "17:00",
+                    "startTime": "16:00"
+                },
+                {
+                    "day": "Friday",
+                    "endTime": "18:00",
+                    "startTime": "17:00"
+                }
+            ],
+            "name": "James",
+            "preferredCourses": [
+                {
+                    "courseName": "Math",
+                    "preferredTimeSlots": [
+                        {
+                            "day": "Friday",
+                            "endTime": "17:00",
+                            "startTime": "16:00"
+                        }
+                    ]
+                },
+                {
+                    "courseName": "Physics",
+                    "preferredTimeSlots": [
+                        {
+                            "day": "Friday",
+                            "endTime": "18:00",
+                            "startTime": "17:00"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "timeSlots": [
+        {
+            "day": "Monday",
+            "endTime": "12:00",
+            "startTime": "10:00"
+        },
+        {
+            "day": "Friday",
+            "endTime": "17:00",
+            "startTime": "16:00"
+        },
+        {
+            "day": "Friday",
+            "endTime": "18:00",
+            "startTime": "17:00"
+        }
+    ]
+}
