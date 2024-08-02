@@ -1,7 +1,8 @@
 #include "Instructor.h"
 
-Instructor::Instructor(std::string name_, std::vector<TimeSlot> availability_, std::vector<Course> preferred_courses)
-        : name(name_), availability(availability_), preferredCourses(preferred_courses) {}
+Instructor::Instructor(std::string name_, std::vector<TimeSlot> availability_,
+                       std::vector<Course> preferred_courses)
+    : name(name_), availability(availability_), preferredCourses(preferred_courses) {}
 
 void Instructor::displayInfo() const {
     std::cout << "Instructor Name: " << name << std::endl;
@@ -15,27 +16,19 @@ void Instructor::displayInfo() const {
     }
 }
 
-std::string Instructor::getName() const {
-    return this->name;
-}
+std::string Instructor::getName() const { return this->name; }
 
-std::vector<TimeSlot> Instructor::getAvailability() const {
-    return this->availability;
-}
+std::vector<TimeSlot> Instructor::getAvailability() const { return this->availability; }
 
-std::vector<Course> Instructor::getPreferredCourses() const {
-    return this->preferredCourses;
-}
+std::vector<Course> Instructor::getPreferredCourses() const { return this->preferredCourses; }
 
-void Instructor::addPreferredTimeSlot(TimeSlot& timeSlot){
+void Instructor::addPreferredTimeSlot(TimeSlot& timeSlot) {
     this->availability.push_back(timeSlot);
 }
 
-void Instructor::addPreferredCourse(Course& course){
-    this->preferredCourses.push_back(course);
-}
+void Instructor::addPreferredCourse(Course& course) { this->preferredCourses.push_back(course); }
 
-json Instructor::toJson() const{
+json Instructor::toJson() const {
     json availabilityJson = json::array();
     for (const auto& timeSlot : availability) {
         availabilityJson.push_back(timeSlot.toJson());
@@ -46,9 +39,8 @@ json Instructor::toJson() const{
         coursesJson.push_back(course.toJson());
     }
 
-    return json{{"name", name}, {"availability", availabilityJson}, {"preferredCourses", coursesJson}};
+    return json{
+        {"name", name}, {"availability", availabilityJson}, {"preferredCourses", coursesJson}};
 }
 
-bool Instructor::operator==(const Instructor& other) const {
-    return this->name == other.name;
-}
+bool Instructor::operator==(const Instructor& other) const { return this->name == other.name; }

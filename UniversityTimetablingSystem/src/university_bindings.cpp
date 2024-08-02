@@ -1,9 +1,10 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
-#include "University.h"
+
 #include "Course.h"
 #include "Instructor.h"
 #include "TimeSlot.h"
+#include "University.h"
 
 namespace py = pybind11;
 
@@ -30,7 +31,8 @@ PYBIND11_MODULE(university_bindings, m) {
         .def("getPreferredTimeSlots", &Course::getPreferredTimeSlots);
 
     py::class_<Instructor>(m, "Instructor")
-        .def(py::init<const std::string&, const std::vector<TimeSlot>&, const std::vector<Course>&>())
+        .def(py::init<const std::string&, const std::vector<TimeSlot>&,
+                      const std::vector<Course>&>())
         .def("getName", &Instructor::getName)
         .def("getAvailability", &Instructor::getAvailability)
         .def("getPreferredCourses", &Instructor::getPreferredCourses);

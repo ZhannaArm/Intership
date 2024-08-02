@@ -1,12 +1,13 @@
 #include <iostream>
 #include <vector>
-#include "argparse.h"
-#include "TimeSlot.h"
+
 #include "Course.h"
 #include "Instructor.h"
+#include "TimeSlot.h"
 #include "University.h"
+#include "argparse.h"
 
-//function to find a course by name in the university
+// function to find a course by name in the university
 Course* findCourseByName(const std::string& courseName, University& university) {
     for (Course& course : university.getCourses()) {
         if (course.getCourseName() == courseName) {
@@ -16,10 +17,10 @@ Course* findCourseByName(const std::string& courseName, University& university) 
     return nullptr;
 }
 
-int main(int argc, char **argv) {
+int main(int argc, char** argv) {
     argparse::ArgumentParser program("UniversityTimetablingSystem", "University");
 
-    //define arguments
+    // define arguments
     program.add_argument("--addInstructor", "Add a new instructor", false);
 
     program.add_argument("--addCourse", "Add a new course", false);
@@ -38,7 +39,7 @@ int main(int argc, char **argv) {
 
     program.add_argument("--stateFile", "Path to the state file (e.g., result.json)", true);
 
-    //parse arguments
+    // parse arguments
     auto result = program.parse(argc, const_cast<const char**>(argv));
     if (result) {
         std::cerr << "Error: " << result.what() << std::endl;
@@ -69,7 +70,8 @@ int main(int argc, char **argv) {
         if (program.exists("--availability")) {
             auto availabilityArgs = program.get<std::vector<std::string>>("availability");
             for (size_t i = 0; i < availabilityArgs.size(); i += 3) {
-                TimeSlot slot(availabilityArgs[i], availabilityArgs[i+1], availabilityArgs[i+2]);
+                TimeSlot slot(availabilityArgs[i], availabilityArgs[i + 1],
+                              availabilityArgs[i + 2]);
                 availability.push_back(slot);
             }
         }
@@ -87,7 +89,7 @@ int main(int argc, char **argv) {
         if (program.exists("--preferredTimeSlots")) {
             auto timeSlotArgs = program.get<std::vector<std::string>>("preferredTimeSlots");
             for (size_t i = 0; i < timeSlotArgs.size(); i += 3) {
-                TimeSlot slot(timeSlotArgs[i], timeSlotArgs[i+1], timeSlotArgs[i+2]);
+                TimeSlot slot(timeSlotArgs[i], timeSlotArgs[i + 1], timeSlotArgs[i + 2]);
                 preferredTimeSlots.push_back(slot);
             }
         }
@@ -118,8 +120,9 @@ int main(int argc, char **argv) {
         return 0;
     }
 
-    if(program.exists("--clearFile")){
-        std::ofstream file("result.json", std::ofstream::trunc); //we open the file in cleaning mode
+    if (program.exists("--clearFile")) {
+        std::ofstream file("result.json",
+                           std::ofstream::trunc);  // we open the file in cleaning mode
         if (!file) {
             std::cerr << "Failed to open file result.json for clearing." << std::endl;
         }
@@ -128,7 +131,8 @@ int main(int argc, char **argv) {
         file << emptyJson.dump(4);
 
         file.close();
-        std::cout << "File result.json has been cleared and initialized with an empty JSON object." << std::endl;
+        std::cout << "File result.json has been cleared and initialized with an empty JSON object."
+                  << std::endl;
         rau.loadState("result.json");
     }
 

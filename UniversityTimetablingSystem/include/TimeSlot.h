@@ -1,8 +1,9 @@
 #ifndef UNIVERSITY_TIMETABLING_SYSTEM_TIMESLOT_H
 #define UNIVERSITY_TIMETABLING_SYSTEM_TIMESLOT_H
 #include <iostream>
-#include "nlohmann/json.hpp"
 #include <string>
+
+#include "nlohmann/json.hpp"
 
 /*
  * @class TimeSlot
@@ -42,11 +43,12 @@
 using json = nlohmann::json;
 
 class TimeSlot {
-private:
+   private:
     std::string day;
     std::string startTime;
     std::string endTime;
-public:
+
+   public:
     TimeSlot() = default;
 
     TimeSlot(std::string day_, std::string start_time, std::string end_time);
