@@ -36,6 +36,8 @@ int main(int argc, char **argv) {
 
     program.add_argument("--clearFile", "Clear the result.json file", false);
 
+    program.add_argument("--stateFile", "Path to the state file (e.g., result.json)", true);
+
     //parse arguments
     auto result = program.parse(argc, const_cast<const char**>(argv));
     if (result) {
@@ -43,9 +45,9 @@ int main(int argc, char **argv) {
         program.print_help();
         return 1;
     }
-
+    std::string state_file = program.get<std::string>("--stateFile");
     University rau;
-    rau.loadState("result.json");
+    rau.loadState(state_file);
 
     if (program.exists("--addInstructor")) {
         std::string instructorName = program.get<std::string>("addInstructor");

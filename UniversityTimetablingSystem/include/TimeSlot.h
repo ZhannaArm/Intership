@@ -3,6 +3,7 @@
 #include <iostream>
 #include "nlohmann/json.hpp"
 #include <string>
+
 /*
  * @class TimeSlot
  * @brief A class to represent a time slot with a day, start time, and end time.

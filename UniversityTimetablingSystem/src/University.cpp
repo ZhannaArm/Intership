@@ -33,8 +33,8 @@ bool University::courseExists(const std::string& courseName) const {
     return false;
 }
 
-Course* University::getCourse(const std::string& courseName) const {
-    for (Course& course : this->getCourses()) {
+const Course* University::getCourse(const std::string& courseName) const {
+    for (const auto& course : courses) {
         if (course.getCourseName() == courseName) {
             return &course;
         }
