@@ -1,12 +1,12 @@
 {
     "courses": [
         {
-            "courseName": "Math",
+            "courseName": "History",
             "preferredTimeSlots": [
                 {
-                    "day": "Tuesday",
-                    "endTime": "10:30",
-                    "startTime": "09:00"
+                    "day": "Monday",
+                    "endTime": "11:00",
+                    "startTime": "10:00"
                 }
             ]
         }
@@ -15,20 +15,20 @@
         {
             "availability": [
                 {
-                    "day": "Tuesday",
-                    "endTime": "10:30",
-                    "startTime": "09:00"
+                    "day": "Monday",
+                    "endTime": "11:00",
+                    "startTime": "10:00"
                 }
             ],
-            "name": "Sara",
+            "name": "Ann",
             "preferredCourses": [
                 {
-                    "courseName": "Math",
+                    "courseName": "History",
                     "preferredTimeSlots": [
                         {
-                            "day": "Tuesday",
-                            "endTime": "10:30",
-                            "startTime": "09:00"
+                            "day": "Monday",
+                            "endTime": "11:00",
+                            "startTime": "10:00"
                         }
                     ]
                 }
@@ -37,9 +37,9 @@
     ],
     "timeSlots": [
         {
-            "day": "Tuesday",
-            "endTime": "10:30",
-            "startTime": "09:00"
+            "day": "Monday",
+            "endTime": "11:00",
+            "startTime": "10:00"
         }
     ]
 }
