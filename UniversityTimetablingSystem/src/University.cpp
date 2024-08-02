@@ -209,6 +209,7 @@ std::vector<std::pair<Course, std::pair<TimeSlot, Instructor>>> University::sche
     while (temperature > minTemperature) {
         //we create a new "candidate" schedule by making a small change to the current schedule
         auto newSchedule = currentSchedule;
+
         int randomIndex = std::rand() % newSchedule.size();
         TimeSlot newTimeSlot = timeSlots[std::rand() % timeSlots.size()];
         Instructor newInstructor = instructors[std::rand() % instructors.size()];

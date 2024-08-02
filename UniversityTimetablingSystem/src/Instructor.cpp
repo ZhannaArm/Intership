@@ -1,7 +1,9 @@
 #include "Instructor.h"
 
+#include <utility>
+
 Instructor::Instructor(std::string name_, std::vector<TimeSlot> availability_, std::vector<Course> preferred_courses)
-        : name(name_), availability(availability_), preferredCourses(preferred_courses) {}
+        : name(std::move(name_)), availability(std::move(availability_)), preferredCourses(std::move(preferred_courses)) {}
 
 void Instructor::displayInfo() const {
     std::cout << "Instructor Name: " << name << std::endl;

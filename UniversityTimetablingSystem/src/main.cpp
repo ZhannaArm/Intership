@@ -19,7 +19,6 @@ Course* findCourseByName(const std::string& courseName, University& university) 
 int main(int argc, char **argv) {
     argparse::ArgumentParser program("UniversityTimetablingSystem", "University");
 
-    //define arguments
     program.add_argument("--addInstructor", "Add a new instructor", false);
 
     program.add_argument("--addCourse", "Add a new course", false);

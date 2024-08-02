@@ -1,7 +1,9 @@
 #include "TimeSlot.h"
 
+#include <utility>
+
 TimeSlot::TimeSlot(std::string day_, std::string start_time, std::string end_time)
-            : day(day_), startTime(start_time), endTime(end_time) {}
+            : day(std::move(day_)), startTime(std::move(start_time)), endTime(std::move(end_time)) {}
 
 void TimeSlot::displayInfo() const {
         std::cout << "Day: " << day << ", Start Time: " << startTime << ", End Time: " << endTime << std::endl;

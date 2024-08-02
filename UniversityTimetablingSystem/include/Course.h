@@ -4,6 +4,7 @@
 #include <vector>
 #include "TimeSlot.h"
 #include <nlohmann/json.hpp>
+
 /*
  * @class Course
  * @A class to represent a course with a name and preferred time slots.

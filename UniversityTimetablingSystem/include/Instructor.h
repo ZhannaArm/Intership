@@ -6,6 +6,7 @@
 #include "nlohmann/json.hpp"
 #include "Course.h"
 #include "TimeSlot.h"
+
 /*
  * @class Instructor
  * @brief A class to represent an instructor with a name, availability, and preferred courses.

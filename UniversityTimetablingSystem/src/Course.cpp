@@ -1,8 +1,9 @@
 #include "Course.h"
 #include <iostream>
+#include <utility>
 
 Course::Course(std::string course_name, std::vector<TimeSlot> preferred_time_slots)
-        : courseName(course_name), preferredTimeSlots(preferred_time_slots) {}
+        : courseName(std::move(course_name)), preferredTimeSlots(std::move(preferred_time_slots)) {}
 
 void Course::displayInfo() const {
     std::cout << "Course Name: " << courseName << std::endl;
