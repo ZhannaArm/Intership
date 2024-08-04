@@ -29,12 +29,6 @@ int main(int argc, char** argv) {
 
     program.add_argument(ARG_SCHEDULE, "Generate the schedule", false);
 
-    program.add_argument(ARG_AVAILABILITY, "Represents instructor's availability", false);
-
-    program.add_argument(ARG_PREFERRED_COURSES, "Represents instructor's preferred courses", false);
-
-    program.add_argument(ARG_PREFERRED_TIME_SLOTS, "Represents preferred course time slots", false);
-
     program.add_argument(ARG_CLEAR_FILE, "Clear the result.json file", false);
 
     program.add_argument(ARG_STATE_FILE, "Path to the state file (e.g., result.json)", true);
@@ -46,34 +40,30 @@ int main(int argc, char** argv) {
         program.print_help();
         return 1;
     }
-    std::string state_file = program.get<std::string>(ARG_STATE_FILE);
+    auto state_file = program.get<std::string>(ARG_STATE_FILE);
     University rau;
     rau.loadState(state_file);
 
     if (program.exists(ARG_ADD_INSTRUCTOR)) {
-        std::string instructorName = program.get<std::string>(ADD_INSTRUCTOR);
+        auto instructorName = program.get<std::string>(ADD_INSTRUCTOR);
         std::vector<Course> preferredCourses;
         std::vector<TimeSlot> availability;
 
-        if (program.exists(ARG_PREFERRED_COURSES)) {
-            auto courses = program.get<std::vector<std::string>>(PREFERRED_COURSES);
-            for (const auto& courseName : courses) {
-                Course* course = findCourseByName(courseName, rau);
-                if (course != nullptr) {
-                    preferredCourses.push_back(*course);
-                } else {
-                    std::cerr << "Course " << courseName << " not found!" << std::endl;
-                }
+        auto courses = program.get<std::vector<std::string>>(PREFERRED_COURSES);
+        for (const auto& courseName : courses) {
+            Course* course = findCourseByName(courseName, rau);
+            if (course != nullptr) {
+                preferredCourses.push_back(*course);
+            } else {
+                std::cerr << "Course " << courseName << " not found!" << std::endl;
             }
         }
 
-        if (program.exists(ARG_AVAILABILITY)) {
-            auto availabilityArgs = program.get<std::vector<std::string>>(AVAILABILITY);
-            for (size_t i = 0; i < availabilityArgs.size(); i += 3) {
-                TimeSlot slot(availabilityArgs[i], availabilityArgs[i + 1],
-                              availabilityArgs[i + 2]);
-                availability.push_back(slot);
-            }
+        auto availabilityArgs = program.get<std::vector<std::string>>(AVAILABILITY);
+        for (size_t i = 0; i < availabilityArgs.size(); i += 3) {
+            TimeSlot slot(availabilityArgs[i], availabilityArgs[i + 1],
+                          availabilityArgs[i + 2]);
+            availability.push_back(slot);
         }
 
         Instructor instructor(instructorName, availability, preferredCourses);
@@ -83,15 +73,13 @@ int main(int argc, char** argv) {
     }
 
     if (program.exists(ARG_ADD_COURSE)) {
-        std::string courseName = program.get<std::string>(ADD_COURSE);
+        auto courseName = program.get<std::string>(ADD_COURSE);
         std::vector<TimeSlot> preferredTimeSlots;
 
-        if (program.exists(ARG_PREFERRED_TIME_SLOTS)) {
-            auto timeSlotArgs = program.get<std::vector<std::string>>(PREFERRED_TIME_SLOTS);
-            for (size_t i = 0; i < timeSlotArgs.size(); i += 3) {
-                TimeSlot slot(timeSlotArgs[i], timeSlotArgs[i + 1], timeSlotArgs[i + 2]);
-                preferredTimeSlots.push_back(slot);
-            }
+        auto timeSlotArgs = program.get<std::vector<std::string>>(PREFERRED_TIME_SLOTS);
+        for (size_t i = 0; i < timeSlotArgs.size(); i += 3) {
+            TimeSlot slot(timeSlotArgs[i], timeSlotArgs[i + 1], timeSlotArgs[i + 2]);
+            preferredTimeSlots.push_back(slot);
         }
 
         Course course(courseName, preferredTimeSlots);

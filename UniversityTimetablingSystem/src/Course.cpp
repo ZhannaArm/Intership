@@ -8,7 +8,7 @@ Course::Course(std::string course_name, std::vector<TimeSlot> preferred_time_slo
 
 void Course::displayInfo() const {
     std::cout << "Course Name: " << courseName << std::endl;
-    std::cout << "Preferred Time Slots " << std::endl;
+    std::cout << "Preferred Time Slots: " << std::endl;
     for (const auto& timeSlot : preferredTimeSlots) {
         timeSlot.displayInfo();
     }
