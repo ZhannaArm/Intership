@@ -56,7 +56,7 @@ void University::loadCoursesFromJson(const json& j) {
     for (const auto& courseJson : j[COURSES]) {
         std::string courseName = courseJson[COURSE_NAME];
         std::vector<TimeSlot> preferredTimeSlots;
-        for (const auto& timeSlotJson : courseJson[PREFERRED_TIMESLOTS]) {
+        for (const auto& timeSlotJson : courseJson[PREFERRED_TIME_SLOTS]) {
             preferredTimeSlots.emplace_back(timeSlotJson[DAY], timeSlotJson[START_TIME],
                                             timeSlotJson[END_TIME]);
         }
@@ -77,7 +77,7 @@ void University::loadInstructorsFromJson(const json& j) {
         for (const auto& courseJson : instructorJson[PREFERRED_COURSES]) {
             std::string courseName = courseJson[COURSE_NAME];
             std::vector<TimeSlot> preferredTimeSlots;
-            for (const auto& timeSlotJson : courseJson[PREFERRED_TIMESLOTS]) {
+            for (const auto& timeSlotJson : courseJson[PREFERRED_TIME_SLOTS]) {
                 preferredTimeSlots.emplace_back(timeSlotJson[DAY], timeSlotJson[START_TIME],
                                                 timeSlotJson[END_TIME]);
             }

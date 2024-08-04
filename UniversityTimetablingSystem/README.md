@@ -55,7 +55,8 @@ To build the project, you need to have CMake installed. Run the following comman
 ```sh
 git clone --recurse-submodules https://github.com/your-repository
 cd your-repository
-./build.sh build   # Build the project (default to Release mode)
+./build.sh # Build the project (default to Release mode)
+./build.sh sanitize   # Build the project in Sanitize mode
 ./build.sh release # Build the project in Release mode
 ./build.sh debug   # Build the project in Debug mode
 ```
