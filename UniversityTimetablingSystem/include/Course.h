@@ -1,10 +1,11 @@
 #ifndef UNIVERSITY_TIMETABLING_SYSTEM_COURSE_H
 #define UNIVERSITY_TIMETABLING_SYSTEM_COURSE_H
+#include <nlohmann/json.hpp>
 #include <string>
 #include <vector>
-#include "TimeSlot.h"
-#include <nlohmann/json.hpp>
 
+#include "TimeSlot.h"
+#include "Constants.h"
 /*
  * @class Course
  * @A class to represent a course with a name and preferred time slots.
@@ -46,11 +47,11 @@
  */
 
 class Course {
-private:
+   private:
     std::string courseName;
     std::vector<TimeSlot> preferredTimeSlots;
 
-public:
+   public:
     Course() = default;
 
     Course(std::string course_name, std::vector<TimeSlot> preferred_time_slots);
