@@ -21,14 +21,13 @@ bool University::courseExists(const std::string& courseName) const {
     return false;
 }
 
-const Course* University::getCourse(const std::string& courseName) const {
+Course University::getCourse(const std::string& courseName) const {
     for (const auto& course : courses) {
         if (course.getCourseName() == courseName) {
-            return &course;
+            return course;
         }
     }
-    return nullptr;
-    // throw std::runtime_error("Course not found");
+    throw std::runtime_error("Course not found");
 }
 
 void University::saveState(const std::string& filename) {

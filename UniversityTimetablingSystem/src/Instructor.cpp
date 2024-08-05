@@ -1,7 +1,7 @@
 #include "Instructor.h"
 
-Instructor::Instructor(std::string name_, std::vector<TimeSlot> availability_,
-                       std::vector<Course> preferred_courses)
+Instructor::Instructor(const std::string& name_, const std::vector<TimeSlot>& availability_,
+                       const std::vector<Course>& preferred_courses)
     : name(name_), availability(availability_), preferredCourses(preferred_courses) {}
 
 void Instructor::displayInfo() const {

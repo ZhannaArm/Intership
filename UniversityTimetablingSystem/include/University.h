@@ -100,7 +100,7 @@ class University {
 
     bool courseExists(const std::string& courseName) const;
 
-    const Course* getCourse(const std::string& courseName) const;
+    Course getCourse(const std::string& courseName) const;
 
     void saveState(const std::string& filename);
 

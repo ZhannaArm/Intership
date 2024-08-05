@@ -39,9 +39,10 @@ def add_instructor(request):
                 if not university.courseExists(course_name):
                     return JsonResponse({'status': 'Error', 'message': f'Course {course_name} does not exist'}, status=400)
 
-                course = university.getCourse(course_name)
-                if course is None:
-                    return JsonResponse({'status': 'Error', 'message': f'Course {course_name} does not exist'}, status=400)
+                try:
+                    course = university.getCourse(course_name)
+                except Exception as e:
+                    return JsonResponse({'status': 'Error', 'message': str(e)}, status=400)
 
                 preferred_courses.append(course)
 
