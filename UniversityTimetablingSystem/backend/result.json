@@ -1,12 +1,22 @@
 {
     "courses": [
         {
-            "courseName": "History",
+            "courseName": "Math",
             "preferredTimeSlots": [
                 {
                     "day": "Monday",
-                    "endTime": "11:00",
-                    "startTime": "10:00"
+                    "endTime": "13:00",
+                    "startTime": "12:00"
+                }
+            ]
+        },
+        {
+            "courseName": "Physics",
+            "preferredTimeSlots": [
+                {
+                    "day": "Friday",
+                    "endTime": "14:00",
+                    "startTime": "13:00"
                 }
             ]
         }
@@ -16,19 +26,34 @@
             "availability": [
                 {
                     "day": "Monday",
-                    "endTime": "11:00",
-                    "startTime": "10:00"
+                    "endTime": "13:00",
+                    "startTime": "12:00"
+                },
+                {
+                    "day": "Friday",
+                    "endTime": "14:00",
+                    "startTime": "13:00"
                 }
             ],
-            "name": "Ann",
+            "name": "James",
             "preferredCourses": [
                 {
-                    "courseName": "History",
+                    "courseName": "Math",
                     "preferredTimeSlots": [
                         {
                             "day": "Monday",
-                            "endTime": "11:00",
-                            "startTime": "10:00"
+                            "endTime": "13:00",
+                            "startTime": "12:00"
+                        }
+                    ]
+                },
+                {
+                    "courseName": "Physics",
+                    "preferredTimeSlots": [
+                        {
+                            "day": "Friday",
+                            "endTime": "14:00",
+                            "startTime": "13:00"
                         }
                     ]
                 }
@@ -38,8 +63,13 @@
     "timeSlots": [
         {
             "day": "Monday",
-            "endTime": "11:00",
-            "startTime": "10:00"
+            "endTime": "13:00",
+            "startTime": "12:00"
+        },
+        {
+            "day": "Friday",
+            "endTime": "14:00",
+            "startTime": "13:00"
         }
     ]
 }
