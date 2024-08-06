@@ -1,0 +1,9 @@
+[submodule "UniversityTimetablingSystem/argparse"]
+	path = UniversityTimetablingSystem/argparse
+	url = https://github.com/jamolnng/argparse.git
+[submodule "UniversityTimetablingSystem/googletest"]
+	path = UniversityTimetablingSystem/googletest
+	url = https://github.com/google/googletest.git
+[submodule "UniversityTimetablingSystem/nlohmann"]
+	path = UniversityTimetablingSystem/nlohmann
+	url = https://github.com/nlohmann/json.git

@@ -1,54 +1,129 @@
+#include <iostream>
 #include <vector>
-#include "TimeSlot.h"
+
 #include "Course.h"
 #include "Instructor.h"
+#include "TimeSlot.h"
 #include "University.h"
+#include "argparse.h"
+#include "Constants.h"
 
-int main() {
-    University university;
+// function to find a course by name in the university
+Course* findCourseByName(const std::string& courseName, University& university) {
+    for (Course& course : university.getCourses()) {
+        if (course.getCourseName() == courseName) {
+            return &course;
+        }
+    }
+    return nullptr;
+}
 
-    TimeSlot ts1("Monday", "12:50", "14:25");
-    TimeSlot ts2("Thursday", "9:00", "10:35");
-    TimeSlot ts3("Wednesday", "10:45", "12:20");
-    TimeSlot ts4("Friday", "9:00", "10:35");
-    TimeSlot ts5("Friday", "12:50", "14:25");
+int main(int argc, char** argv) {
+    argparse::ArgumentParser program("UniversityTimetablingSystem", "University");
 
-    std::vector <TimeSlot> course1Slots = {ts3, ts4};
-    Course course1("Сomplex analysis 203", course1Slots);
+    program.add_argument(ARG_ADD_INSTRUCTOR, "Add a new instructor", false);
 
-    std::vector <TimeSlot> course2Slots = {ts1};
-    Course course2("Algorithms 203", course2Slots);
+    program.add_argument(ARG_ADD_COURSE, "Add a new course", false);
 
-    std::vector <TimeSlot> course3Slots = {ts2};
-    Course course3("Linux 203", course3Slots);
+    program.add_argument(ARG_ADD_TIME_SLOT, "Add a new time slot", false);
 
-    university.addCourse(course1);
-    university.addCourse(course2);
-    university.addCourse(course3);
+    program.add_argument(ARG_SCHEDULE, "Generate the schedule", false);
 
-    std::vector <TimeSlot> instructor1Availability = {ts1, ts4};
-    std::vector <TimeSlot> instructor2Availability = {ts1, ts5};
-    std::vector <TimeSlot> instructor3Availability = {ts2};
-    std::vector <Course> instructor1PreferredCourses = {course1};
-    std::vector <Course> instructor2PreferredCourses = {course2};
-    std::vector <Course> instructor3PreferredCourses = {course3};
-    Instructor instructor1("Berberyan S.L.", instructor1Availability, instructor1PreferredCourses);
-    Instructor instructor2("Hayrapetyan T.B.", instructor2Availability, instructor2PreferredCourses);
-    Instructor instructor3("Smbatyan M.A.", instructor3Availability, instructor3PreferredCourses);
+    program.add_argument(ARG_CLEAR_FILE, "Clear the result.json file", false);
 
-    university.addInstructor(instructor1);
-    university.addInstructor(instructor2);
-    university.addInstructor(instructor3);
-    university.addTimeSlot(ts1);
-    university.addTimeSlot(ts2);
-    university.addTimeSlot(ts3);
-    university.addTimeSlot(ts4);
-    university.addTimeSlot(ts5);
+    program.add_argument(ARG_STATE_FILE, "Path to the state file (e.g., result.json)", true);
 
-    //university.displayInfo(); //function to see all information about the university
-    university.saveState("rau_state.json");
-    university.loadState("rau_state.json");
-    auto schedule = university.schedule();
-    university.displaySchedule();
+    // parse arguments
+    auto result = program.parse(argc, const_cast<const char**>(argv));
+    if (result) {
+        std::cerr << "Error: " << result.what() << std::endl;
+        program.print_help();
+        return 1;
+    }
+    auto state_file = program.get<std::string>(ARG_STATE_FILE);
+    University rau;
+    rau.loadState(state_file);
+
+    if (program.exists(ARG_ADD_INSTRUCTOR)) {
+        auto instructorName = program.get<std::string>(ADD_INSTRUCTOR);
+        std::vector<Course> preferredCourses;
+        std::vector<TimeSlot> availability;
+
+        auto courses = program.get<std::vector<std::string>>(PREFERRED_COURSES);
+        for (const auto& courseName : courses) {
+            Course* course = findCourseByName(courseName, rau);
+            if (course != nullptr) {
+                preferredCourses.push_back(*course);
+            } else {
+                std::cerr << "Course " << courseName << " not found!" << std::endl;
+            }
+        }
+
+        auto availabilityArgs = program.get<std::vector<std::string>>(AVAILABILITY);
+        for (size_t i = 0; i < availabilityArgs.size(); i += 3) {
+            TimeSlot slot(availabilityArgs[i], availabilityArgs[i + 1],
+                          availabilityArgs[i + 2]);
+            availability.push_back(slot);
+        }
+
+        Instructor instructor(instructorName, availability, preferredCourses);
+        rau.addInstructor(instructor);
+
+        rau.saveState(RESULT_JSON);
+    }
+
+    if (program.exists(ARG_ADD_COURSE)) {
+        auto courseName = program.get<std::string>(ADD_COURSE);
+        std::vector<TimeSlot> preferredTimeSlots;
+
+        auto timeSlotArgs = program.get<std::vector<std::string>>(PREFERRED_TIME_SLOTS);
+        for (size_t i = 0; i < timeSlotArgs.size(); i += 3) {
+            TimeSlot slot(timeSlotArgs[i], timeSlotArgs[i + 1], timeSlotArgs[i + 2]);
+            preferredTimeSlots.push_back(slot);
+        }
+
+        Course course(courseName, preferredTimeSlots);
+        rau.addCourse(course);
+
+        rau.saveState(RESULT_JSON);
+    }
+
+    if (program.exists(ARG_ADD_TIME_SLOT)) {
+        auto timeSlotArgs = program.get<std::vector<std::string>>(ADD_TIMESLOT);
+        std::string day = timeSlotArgs[0];
+        std::string startTime = timeSlotArgs[1];
+        std::string endTime = timeSlotArgs[2];
+
+        TimeSlot timeSlot(day, startTime, endTime);
+        rau.addTimeSlot(timeSlot);
+
+        rau.saveState(RESULT_JSON);
+    }
+
+    if (program.exists(ARG_SCHEDULE)) {
+        rau.loadState(RESULT_JSON);
+        auto schedule = rau.schedule();
+        rau.displaySchedule();
+        std::cout << "Schedule generated!" << std::endl;
+        return 0;
+    }
+
+    if (program.exists(ARG_CLEAR_FILE)) {
+        std::ofstream file(RESULT_JSON,
+                           std::ofstream::trunc);  // we open the file in cleaning mode
+        if (!file) {
+            std::cerr << "Failed to open file result.json for clearing." << std::endl;
+        }
+
+        json emptyJson = json::object();
+        file << emptyJson.dump(4);
+
+        file.close();
+        std::cout << "File result.json has been cleared and initialized with an empty JSON object."
+                  << std::endl;
+        rau.loadState(RESULT_JSON);
+    }
+
+    rau.displayInfo();
     return 0;
 }

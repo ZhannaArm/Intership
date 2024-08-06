@@ -1,25 +1,50 @@
 cmake_minimum_required(VERSION 3.17)
-project(UniversityTimeTablingSystem)
+project(UniversityTimetablingSystem)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-add_library(nlohmann_json INTERFACE)
-target_include_directories(nlohmann_json INTERFACE "/usr/local/opt/nlohmann-json/include")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-attributes")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-inline")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2 -Wno-inline -DNDEBUG")
+set(CMAKE_CXX_FLAGS_SANITIZE "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address,undefined")
 
-add_executable(UniversityTimeTablingSystem src/main.cpp src/Course.cpp src/TimeSlot.cpp src/Instructor.cpp src/University.cpp src/University.h src/Course.h src/TimeSlot.h src/Instructor.h src/University.h)
-target_link_libraries(UniversityTimeTablingSystem PRIVATE nlohmann_json)
+#Add subdirectory for argparse and nlohmann libraries
+add_subdirectory(argparse)
+add_subdirectory(nlohmann)
 
-# Add Google Test
+#Add source files for the UniversityTimetablingLib library
+add_library(UniversityTimetablingLib SHARED
+        src/Course.cpp
+        src/TimeSlot.cpp
+        src/Instructor.cpp
+        src/University.cpp
+        )
+
+#Include directories for the UniversityTimetablingLib library
+target_include_directories(UniversityTimetablingLib PUBLIC
+        ${CMAKE_SOURCE_DIR}/src
+        ${CMAKE_SOURCE_DIR}/include
+        ${CMAKE_SOURCE_DIR}/nlohmann/include
+        ${CMAKE_SOURCE_DIR}/argparse
+        )
+
+#Add executable for the main application
+add_executable(UniversityTimetablingSystem src/main.cpp) #Creates an executable from main.cpp
+target_link_libraries(UniversityTimetablingSystem PRIVATE UniversityTimetablingLib) #Links an executable file to a dynamic library
+
+#Add Google test
 add_subdirectory(googletest)
 include_directories(googletest/googletest/include)
 
-# Add test executable
-add_executable(runTests tests/test_University.cpp src/Course.cpp src/TimeSlot.cpp src/Instructor.cpp src/University.cpp src/University.h src/Course.h src/TimeSlot.h src/Instructor.h src/University.h)
-target_link_libraries(runTests gtest gtest_main nlohmann_json)
+#Add executable for running tests
+add_executable(runTests tests/test_University.cpp)
+target_link_libraries(runTests PRIVATE UniversityTimetablingLib gtest gtest_main)
 
-# Enable testing
-enable_testing()
+#Enable testing
+#enable_testing()
 
-# Add test
-add_test(NAME runTests COMMAND runTests)
+#Add test
+#add_test(NAME runTests COMMAND runTests)
