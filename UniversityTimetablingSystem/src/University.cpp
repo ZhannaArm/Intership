@@ -56,9 +56,26 @@ json University::convertTimeSlotsToJson() const {
 
 void University::saveState(const std::string& filename) {
     json j;
+<<<<<<< HEAD
     j[COURSES] = convertCoursesToJson();
     j[INSTRUCTORS] = convertInstructorsToJson();
     j[TIME_SLOTS] = convertTimeSlotsToJson();
+=======
+    j[COURSES] = json::array();
+    for (const auto& course : courses) {
+        j[COURSES].push_back(course.toJson());
+    }
+
+    j[INSTRUCTORS] = json::array();
+    for (const auto& instructor : instructors) {
+        j[INSTRUCTORS].push_back(instructor.toJson());
+    }
+
+    j[TIME_SLOTS] = json::array();
+    for (const auto& timeSlot : timeSlots) {
+        j[TIME_SLOTS].push_back(timeSlot.toJson());
+    }
+>>>>>>> 042574d (add Constants.h)
 
     std::ofstream file(filename);
     if (file.is_open()) {
