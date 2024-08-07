@@ -1,75 +1,11 @@
 {
-    "courses": [
-        {
-            "courseName": "Math",
-            "preferredTimeSlots": [
-                {
-                    "day": "Monday",
-                    "endTime": "13:00",
-                    "startTime": "12:00"
-                }
-            ]
-        },
-        {
-            "courseName": "Physics",
-            "preferredTimeSlots": [
-                {
-                    "day": "Friday",
-                    "endTime": "14:00",
-                    "startTime": "13:00"
-                }
-            ]
-        }
-    ],
-    "instructors": [
-        {
-            "availability": [
-                {
-                    "day": "Monday",
-                    "endTime": "13:00",
-                    "startTime": "12:00"
-                },
-                {
-                    "day": "Friday",
-                    "endTime": "14:00",
-                    "startTime": "13:00"
-                }
-            ],
-            "name": "James",
-            "preferredCourses": [
-                {
-                    "courseName": "Math",
-                    "preferredTimeSlots": [
-                        {
-                            "day": "Monday",
-                            "endTime": "13:00",
-                            "startTime": "12:00"
-                        }
-                    ]
-                },
-                {
-                    "courseName": "Physics",
-                    "preferredTimeSlots": [
-                        {
-                            "day": "Friday",
-                            "endTime": "14:00",
-                            "startTime": "13:00"
-                        }
-                    ]
-                }
-            ]
-        }
-    ],
+    "courses": [],
+    "instructors": [],
     "timeSlots": [
         {
-            "day": "Monday",
-            "endTime": "13:00",
-            "startTime": "12:00"
-        },
-        {
-            "day": "Friday",
-            "endTime": "14:00",
-            "startTime": "13:00"
+            "day": "Tuesday",
+            "end_time": "14:00",
+            "start_time": "13:00"
         }
     ]
 }

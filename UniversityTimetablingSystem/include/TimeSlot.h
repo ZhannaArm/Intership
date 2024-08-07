@@ -3,8 +3,8 @@
 #include <iostream>
 #include <string>
 
+#include "Constants.h"
 #include "nlohmann/json.hpp"
-
 /*
  * @class TimeSlot
  * @brief A class to represent a time slot with a day, start time, and end time.
@@ -43,12 +43,12 @@
 using json = nlohmann::json;
 
 class TimeSlot {
-   private:
+private:
     std::string day;
     std::string startTime;
     std::string endTime;
 
-   public:
+public:
     TimeSlot() = default;
 
     TimeSlot(const std::string& day_, const std::string& start_time, const std::string& end_time);

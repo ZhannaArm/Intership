@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 
+#include "Constants.h"
 #include "TimeSlot.h"
 /*
  * @class Course
@@ -46,11 +47,11 @@
  */
 
 class Course {
-   private:
+private:
     std::string courseName;
     std::vector<TimeSlot> preferredTimeSlots;
 
-   public:
+public:
     Course() = default;
 
     Course(const std::string& course_name, const std::vector<TimeSlot>& preferred_time_slots);

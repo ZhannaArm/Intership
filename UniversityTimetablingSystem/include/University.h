@@ -12,6 +12,7 @@
 #include <string>
 #include <vector>
 
+#include "Constants.h"
 #include "Course.h"
 #include "Instructor.h"
 #include "TimeSlot.h"
@@ -74,7 +75,7 @@
  * TimeSlot>> scheduleMap.
  */
 class University {
-   private:
+private:
     std::vector<Course> courses;
     std::vector<Instructor> instructors;
     std::vector<TimeSlot> timeSlots;
@@ -83,9 +84,9 @@ class University {
     std::map<Course, std::pair<Instructor, TimeSlot>> scheduleMap;
 
     static double calculateScheduleCost(
-        const std::vector<std::pair<Course, std::pair<TimeSlot, Instructor>>>& schedule);
+            const std::vector<std::pair<Course, std::pair<TimeSlot, Instructor>>>& schedule);
 
-   public:
+public:
     void addCourse(const Course& course);
 
     void addInstructor(const Instructor& instructor);
@@ -102,7 +103,19 @@ class University {
 
     Course getCourse(const std::string& courseName) const;
 
+    json convertCoursesToJson() const;
+
+    json convertInstructorsToJson() const;
+
+    json convertTimeSlotsToJson() const;
+
     void saveState(const std::string& filename);
+
+    void loadCoursesFromJson(const json& j);
+
+    void loadInstructorsFromJson(const json& j);
+
+    void loadTimeSlotsFromJson(const json& j);
 
     void loadState(const std::string& filename);
 

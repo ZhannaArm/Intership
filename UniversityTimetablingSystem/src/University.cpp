@@ -30,22 +30,35 @@ Course University::getCourse(const std::string& courseName) const {
     throw std::runtime_error("Course not found");
 }
 
+json University::convertCoursesToJson() const {
+    json j = json::array();
+    for (const auto& course : courses) {
+        j.push_back(course.toJson());
+    }
+    return j;
+}
+
+json University::convertInstructorsToJson() const {
+    json j = json::array();
+    for (const auto& instructor : instructors) {
+        j.push_back(instructor.toJson());
+    }
+    return j;
+}
+
+json University::convertTimeSlotsToJson() const {
+    json j = json::array();
+    for (const auto& timeSlot : timeSlots) {
+        j.push_back(timeSlot.toJson());
+    }
+    return j;
+}
+
 void University::saveState(const std::string& filename) {
     json j;
-    j["courses"] = json::array();
-    for (const auto& course : courses) {
-        j["courses"].push_back(course.toJson());
-    }
-
-    j["instructors"] = json::array();
-    for (const auto& instructor : instructors) {
-        j["instructors"].push_back(instructor.toJson());
-    }
-
-    j["timeSlots"] = json::array();
-    for (const auto& timeSlot : timeSlots) {
-        j["timeSlots"].push_back(timeSlot.toJson());
-    }
+    j[COURSES] = convertCoursesToJson();
+    j[INSTRUCTORS] = convertInstructorsToJson();
+    j[TIME_SLOTS] = convertTimeSlotsToJson();
 
     std::ofstream file(filename);
     if (file.is_open()) {
@@ -56,49 +69,58 @@ void University::saveState(const std::string& filename) {
     }
 }
 
+void University::loadCoursesFromJson(const json& j) {
+    courses.clear();
+    for (const auto& courseJson : j[COURSES]) {
+        std::string courseName = courseJson[COURSE_NAME];
+        std::vector<TimeSlot> preferredTimeSlots;
+        for (const auto& timeSlotJson : courseJson[PREFERRED_TIME_SLOTS]) {
+            preferredTimeSlots.emplace_back(timeSlotJson[DAY], timeSlotJson[START_TIME],
+                                            timeSlotJson[END_TIME]);
+        }
+        courses.emplace_back(courseName, preferredTimeSlots);
+    }
+}
+
+void University::loadInstructorsFromJson(const json& j) {
+    instructors.clear();
+    for (const auto& instructorJson : j[INSTRUCTORS]) {
+        std::string name = instructorJson[NAME];
+        std::vector<TimeSlot> availability;
+        for (const auto& timeSlotJson : instructorJson[AVAILABILITY]) {
+            availability.emplace_back(timeSlotJson[DAY], timeSlotJson[START_TIME],
+                                      timeSlotJson[END_TIME]);
+        }
+        std::vector<Course> preferredCourses;
+        for (const auto& courseJson : instructorJson[PREFERRED_COURSES]) {
+            std::string courseName = courseJson[COURSE_NAME];
+            std::vector<TimeSlot> preferredTimeSlots;
+            for (const auto& timeSlotJson : courseJson[PREFERRED_TIME_SLOTS]) {
+                preferredTimeSlots.emplace_back(timeSlotJson[DAY], timeSlotJson[START_TIME],
+                                                timeSlotJson[END_TIME]);
+            }
+            preferredCourses.emplace_back(courseName, preferredTimeSlots);
+        }
+        instructors.emplace_back(name, availability, preferredCourses);
+    }
+}
+
+void University::loadTimeSlotsFromJson(const json& j) {
+    timeSlots.clear();
+    for (const auto& timeSlotJson : j[TIME_SLOTS]) {
+        timeSlots.emplace_back(timeSlotJson[DAY], timeSlotJson[START_TIME], timeSlotJson[END_TIME]);
+    }
+}
+
 void University::loadState(const std::string& filename) {
     std::ifstream file(filename);
     if (file.is_open()) {
         json j;
         file >> j;
 
-        courses.clear();
-        for (const auto& courseJson : j["courses"]) {
-            std::string courseName = courseJson["courseName"];
-            std::vector<TimeSlot> preferredTimeSlots;
-            for (const auto& timeSlotJson : courseJson["preferredTimeSlots"]) {
-                preferredTimeSlots.emplace_back(timeSlotJson["day"], timeSlotJson["startTime"],
-                                                timeSlotJson["endTime"]);
-            }
-            courses.emplace_back(courseName, preferredTimeSlots);
-        }
-
-        instructors.clear();
-        for (const auto& instructorJson : j["instructors"]) {
-            std::string name = instructorJson["name"];
-            std::vector<TimeSlot> availability;
-            for (const auto& timeSlotJson : instructorJson["availability"]) {
-                availability.emplace_back(timeSlotJson["day"], timeSlotJson["startTime"],
-                                          timeSlotJson["endTime"]);
-            }
-            std::vector<Course> preferredCourses;
-            for (const auto& courseJson : instructorJson["preferredCourses"]) {
-                std::string courseName = courseJson["courseName"];
-                std::vector<TimeSlot> preferredTimeSlots;
-                for (const auto& timeSlotJson : courseJson["preferredTimeSlots"]) {
-                    preferredTimeSlots.emplace_back(timeSlotJson["day"], timeSlotJson["startTime"],
-                                                    timeSlotJson["endTime"]);
-                }
-                preferredCourses.emplace_back(courseName, preferredTimeSlots);
-            }
-            instructors.emplace_back(name, availability, preferredCourses);
-        }
-
-        timeSlots.clear();
-        for (const auto& timeSlotJson : j["timeSlots"]) {
-            timeSlots.emplace_back(timeSlotJson["day"], timeSlotJson["startTime"],
-                                   timeSlotJson["endTime"]);
-        }
+        loadCoursesFromJson(j);
+        loadInstructorsFromJson(j);
+        loadTimeSlotsFromJson(j);
 
         file.close();
     } else {
@@ -130,8 +152,8 @@ void University::schedule_bruteForce() {
     for (const auto& course : courses) {
         bool scheduled = false;  // flag planned successfully planned course
         for (const auto& preferredTimeSlot :
-             course.getPreferredTimeSlots()) {  // for each course we cover all preferred course
-                                                // time slots
+                course.getPreferredTimeSlots()) {  // for each course we cover all preferred course
+            // time slots
             for (const auto& instructor : instructors) {
                 // we check if any of the teachers are available at this time and if the course is
                 // on the teacher's list of preferred courses
@@ -143,7 +165,7 @@ void University::schedule_bruteForce() {
                               course) != instructor.getPreferredCourses().end()) {
                     if (scheduleMap.find(course) ==
                         scheduleMap
-                            .end()) {  // if the course has not yet been added to the schedule
+                                .end()) {  // if the course has not yet been added to the schedule
                         scheduleMap[course] = std::make_pair(instructor, preferredTimeSlot);
                         scheduled = true;
                         break;
@@ -164,7 +186,7 @@ void University::schedule_bruteForce() {
                                   timeSlot) != instructor.getAvailability().end()) {
                         if (scheduleMap.find(course) == scheduleMap.end()) {
                             scheduleMap[course] = scheduleMap[course] =
-                                std::make_pair(instructor, timeSlot);
+                                    std::make_pair(instructor, timeSlot);
                             scheduled = true;
                             break;
                         }
@@ -180,7 +202,7 @@ void University::schedule_bruteForce() {
 
 // function to evaluate the cost of the current schedule (for simulated Annealing algorithm)
 double University::calculateScheduleCost(
-    const std::vector<std::pair<Course, std::pair<TimeSlot, Instructor>>>& schedule) {
+        const std::vector<std::pair<Course, std::pair<TimeSlot, Instructor>>>& schedule) {
     double cost = 0.0;
     for (const auto& entry : schedule) {
         const Course& course = entry.first;
@@ -224,9 +246,9 @@ std::vector<std::pair<Course, std::pair<TimeSlot, Instructor>>> University::sche
     // parameters for simulated annealing
     double temperature = 1200.0;  // temperature allows for many combinations
     double coolingRate =
-        0.005;  // moderately low to give the algorithm enough time to find the optimal solution
+            0.005;  // moderately low to give the algorithm enough time to find the optimal solution
     double minTemperature = 1.0;  // so that the algorithm terminates when the probability of making
-                                  // worse decisions becomes very low
+    // worse decisions becomes very low
 
     auto bestSchedule = currentSchedule;
     double bestCost = calculateScheduleCost(bestSchedule);
@@ -234,6 +256,7 @@ std::vector<std::pair<Course, std::pair<TimeSlot, Instructor>>> University::sche
     while (temperature > minTemperature) {
         // we create a new "candidate" schedule by making a small change to the current schedule
         auto newSchedule = currentSchedule;
+
         int randomIndex = std::rand() % newSchedule.size();
         TimeSlot newTimeSlot = timeSlots[std::rand() % timeSlots.size()];
         Instructor newInstructor = instructors[std::rand() % instructors.size()];
@@ -268,7 +291,7 @@ std::vector<std::pair<Course, std::pair<TimeSlot, Instructor>>> University::sche
 }
 
 std::vector<std::tuple<std::string, std::string, std::string>> University::scheduleToJsonFormat()
-    const {
+const {
     std::vector<std::tuple<std::string, std::string, std::string>> result;
     for (const auto& entry : Schedule) {
         std::string courseName = entry.first.getCourseName();

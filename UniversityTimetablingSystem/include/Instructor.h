@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 
+#include "Constants.h"
 #include "Course.h"
 #include "TimeSlot.h"
 #include "nlohmann/json.hpp"
@@ -54,12 +55,12 @@
  */
 
 class Instructor {
-   private:
+private:
     std::string name;
     std::vector<TimeSlot> availability;
     std::vector<Course> preferredCourses;
 
-   public:
+public:
     Instructor() = default;
 
     Instructor(const std::string& name_, const std::vector<TimeSlot>& availability_,
