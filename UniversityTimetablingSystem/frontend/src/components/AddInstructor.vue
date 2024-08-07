@@ -63,7 +63,7 @@ export default {
       this.instructors.forEach(instructor => {
         const data = {
           name: instructor.name,
-          preferred_courses: instructor.preferredCourses.map(course => ({
+          preferredCourses: instructor.preferredCourses.map(course => ({
             courseName: course.courseName,
             preferredTimeSlots: course.preferredTimeSlots
           })),

@@ -13,7 +13,7 @@ def add_instructor(request):
         try:
             data = json.loads(request.body)
             name = data.get('name')
-            preferred_courses_data = data.get('preferred_courses', [])
+            preferred_courses_data = data.get('preferredCourses', [])
             availability_data = data.get('availability', [])
 
             if not name:
@@ -24,7 +24,7 @@ def add_instructor(request):
                 '--addInstructor',
                 json.dumps({
                     'name': name,
-                    'preferred_courses': preferred_courses_data,
+                    'preferredCourses': preferred_courses_data,
                     'availability': availability_data
                 })
             ]
@@ -47,8 +47,8 @@ def add_course(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-            name = data.get('name')
-            preferred_time_slots_data = data.get('preferred_time_slots', [])
+            name = data.get('courseName')
+            preferred_time_slots_data = data.get('preferredTimeSlots', [])
 
             if not name:
                 return JsonResponse({'status': 'Error', 'message': 'Missing name'}, status=400)
@@ -57,8 +57,8 @@ def add_course(request):
                 '/Users/apple/intership/UniversityTimetablingSystem/build/UniversityTimetablingSystem',
                 '--addCourse',
                 json.dumps({
-                    'name': name,
-                    'preferred_time_slots': preferred_time_slots_data
+                    'courseName': name,
+                    'preferredTimeSlots': preferred_time_slots_data
                 })
             ]
 
@@ -87,6 +87,7 @@ def add_time_slot(request):
                 '--addTimeSlot',
                 json.dumps(data['time_slots'])
             ]
+
 
             result = subprocess.run(args, capture_output=True, text=True, check=True)
             print('Output:', result.stdout)

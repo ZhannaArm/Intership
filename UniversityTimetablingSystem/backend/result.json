@@ -1,1 +1,45 @@
-{}
+{
+    "courses": [
+        {
+            "courseName": "Math",
+            "preferredTimeSlots": [
+                {
+                    "day": "Monday",
+                    "endTime": "12:00",
+                    "startTime": "11:00"
+                }
+            ]
+        }
+    ],
+    "instructors": [
+        {
+            "availability": [
+                {
+                    "day": "Monday",
+                    "endTime": "12:00",
+                    "startTime": "11:00"
+                }
+            ],
+            "name": "James",
+            "preferredCourses": [
+                {
+                    "courseName": "Math",
+                    "preferredTimeSlots": [
+                        {
+                            "day": "Monday",
+                            "endTime": "12:00",
+                            "startTime": "11:00"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "timeSlots": [
+        {
+            "day": "Monday",
+            "endTime": "12:00",
+            "startTime": "11:00"
+        }
+    ]
+}

@@ -47,7 +47,7 @@ void processArgs(int argc, char** argv, University& university) {
             std::string courseJson = argv[++i];
             json j = json::parse(courseJson);
 
-            std::string courseName = j[NAME];
+            std::string courseName = j[COURSE_NAME];
             std::vector<TimeSlot> preferredTimeSlots;
             for (const auto& ts : j[PREFERRED_TIME_SLOTS]) {
                 TimeSlot timeSlot(ts[DAY], ts[START_TIME], ts[END_TIME]);
