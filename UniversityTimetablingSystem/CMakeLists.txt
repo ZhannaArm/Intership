@@ -37,9 +37,9 @@ add_executable(UniversityTimetablingSystem src/main.cpp) #Creates an executable 
 target_link_libraries(UniversityTimetablingSystem PRIVATE UniversityTimetablingLib) #Links an executable file to a dynamic library
 
 # Add PyBind11
-#add_subdirectory(pybind11)
-#pybind11_add_module(university_bindings src/university_bindings.cpp)
-#target_link_libraries(university_bindings PRIVATE UniversityTimetablingLib)
+add_subdirectory(pybind11)
+pybind11_add_module(university_bindings src/university_bindings.cpp)
+target_link_libraries(university_bindings PRIVATE UniversityTimetablingLib)
 
 #Add Google test
 add_subdirectory(googletest)
