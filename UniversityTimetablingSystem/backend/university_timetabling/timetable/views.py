@@ -22,7 +22,7 @@ def add_instructor(request):
         try:
             data = json.loads(request.body)
             name = data.get('name')
-            preferred_courses_data = data.get('preferred_courses', [])
+            preferred_courses_data = data.get('preferredCourses', [])
             availability_data = data.get('availability', [])
 
             if not name:
@@ -64,8 +64,8 @@ def add_course(request):
         try:
             data = json.loads(request.body)
 
-            name = data.get('name')
-            preferred_time_slots_data = data.get('preferred_time_slots', [])
+            name = data.get('courseName')
+            preferred_time_slots_data = data.get('preferredTimeSlots', [])
 
             if not name:
                 return JsonResponse({'status': 'Error', 'message': 'Missing name'}, status=400)
@@ -139,7 +139,7 @@ def show_university(request):
         university = ub.University()
         university.loadState('result.json')
 
-        courses = [{'name': course.getCourseName()} for course in university.getCourses()]
+        courses = [{'courseName': course.getCourseName()} for course in university.getCourses()]
         instructors = [{'name': instructor.getName()} for instructor in university.getInstructors()]
         time_slots = [{'day': slot.getDay(), 'startTime': slot.getStartTime(), 'endTime': slot.getEndTime()} for slot in university.getTimeSlots()]
 

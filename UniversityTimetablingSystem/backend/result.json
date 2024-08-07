@@ -1,11 +1,1 @@
-{
-    "courses": [],
-    "instructors": [],
-    "timeSlots": [
-        {
-            "day": "Tuesday",
-            "end_time": "14:00",
-            "start_time": "13:00"
-        }
-    ]
-}
+{}

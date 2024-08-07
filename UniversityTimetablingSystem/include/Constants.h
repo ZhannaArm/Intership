@@ -2,8 +2,8 @@
 #define UNIVERSITYTIMETABLINGSYSTEM_CONSTANTS_H
 
 constexpr auto DAY = "day";
-constexpr auto START_TIME = "start_time";
-constexpr auto END_TIME = "end_time";
+constexpr auto START_TIME = "startTime";
+constexpr auto END_TIME = "endTime";
 constexpr auto COURSE_NAME = "courseName";
 constexpr auto PREFERRED_TIME_SLOTS = "preferredTimeSlots";
 constexpr auto NAME = "name";

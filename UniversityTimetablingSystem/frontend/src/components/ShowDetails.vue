@@ -5,7 +5,7 @@
     <div v-if="university">
       <h2>Courses</h2>
       <ul>
-        <li v-for="course in university.courses" :key="course.name">{{ course.name }}</li>
+        <li v-for="course in university.courses" :key="course.courseName">{{ course.courseName }}</li>
       </ul>
       <h2>Instructors</h2>
       <ul>
