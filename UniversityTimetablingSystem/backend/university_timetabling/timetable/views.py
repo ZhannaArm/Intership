@@ -3,9 +3,13 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+import os
 import json
 import traceback
 import subprocess
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+project_root = os.path.abspath(os.path.join(current_dir, '../../../build'))
 
 @csrf_exempt
 def add_instructor(request):
@@ -20,7 +24,7 @@ def add_instructor(request):
                 return JsonResponse({'status': 'Error', 'message': 'Missing name'}, status=400)
 
             args = [
-                '/Users/apple/intership/UniversityTimetablingSystem/build/UniversityTimetablingSystem',
+                os.path.join(project_root, 'UniversityTimetablingSystem'),
                 '--addInstructor',
                 json.dumps({
                     'name': name,
@@ -54,7 +58,7 @@ def add_course(request):
                 return JsonResponse({'status': 'Error', 'message': 'Missing name'}, status=400)
 
             args = [
-                '/Users/apple/intership/UniversityTimetablingSystem/build/UniversityTimetablingSystem',
+                os.path.join(project_root, 'UniversityTimetablingSystem'),
                 '--addCourse',
                 json.dumps({
                     'courseName': name,
@@ -83,7 +87,7 @@ def add_time_slot(request):
                 return JsonResponse({'status': 'Error', 'message': 'No time_slots in request body'}, status=400)
 
             args = [
-                '/Users/apple/intership/UniversityTimetablingSystem/build/UniversityTimetablingSystem',
+                os.path.join(project_root, 'UniversityTimetablingSystem'),
                 '--addTimeSlot',
                 json.dumps(data['time_slots'])
             ]
@@ -105,7 +109,7 @@ def generate_schedule(request):
     if request.method == 'POST':
         try:
             args = [
-                '/Users/apple/intership/UniversityTimetablingSystem/build/UniversityTimetablingSystem',
+                os.path.join(project_root, 'UniversityTimetablingSystem'),
                 '--schedule'
             ]
 
@@ -130,7 +134,7 @@ def generate_schedule(request):
 def show_university(request):
     try:
         args = [
-            '/Users/apple/intership/UniversityTimetablingSystem/build/UniversityTimetablingSystem',
+            os.path.join(project_root, 'UniversityTimetablingSystem'),
             '--showUniversity'
         ]
 
