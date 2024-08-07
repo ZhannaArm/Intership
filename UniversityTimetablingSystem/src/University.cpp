@@ -30,22 +30,35 @@ Course University::getCourse(const std::string& courseName) const {
     throw std::runtime_error("Course not found");
 }
 
+json University::convertCoursesToJson() const {
+    json j = json::array();
+    for (const auto& course : courses) {
+        j.push_back(course.toJson());
+    }
+    return j;
+}
+
+json University::convertInstructorsToJson() const {
+    json j = json::array();
+    for (const auto& instructor : instructors) {
+        j.push_back(instructor.toJson());
+    }
+    return j;
+}
+
+json University::convertTimeSlotsToJson() const {
+    json j = json::array();
+    for (const auto& timeSlot : timeSlots) {
+        j.push_back(timeSlot.toJson());
+    }
+    return j;
+}
+
 void University::saveState(const std::string& filename) {
     json j;
-    j["courses"] = json::array();
-    for (const auto& course : courses) {
-        j["courses"].push_back(course.toJson());
-    }
-
-    j["instructors"] = json::array();
-    for (const auto& instructor : instructors) {
-        j["instructors"].push_back(instructor.toJson());
-    }
-
-    j["timeSlots"] = json::array();
-    for (const auto& timeSlot : timeSlots) {
-        j["timeSlots"].push_back(timeSlot.toJson());
-    }
+    j[COURSES] = convertCoursesToJson();
+    j[INSTRUCTORS] = convertInstructorsToJson();
+    j[TIME_SLOTS] = convertTimeSlotsToJson();
 
     std::ofstream file(filename);
     if (file.is_open()) {
@@ -56,49 +69,59 @@ void University::saveState(const std::string& filename) {
     }
 }
 
+void University::loadCoursesFromJson(const json& j) {
+    courses.clear();
+    for (const auto& courseJson : j[COURSES]) {
+        std::string courseName = courseJson[COURSE_NAME];
+        std::vector<TimeSlot> preferredTimeSlots;
+        for (const auto& timeSlotJson : courseJson[PREFERRED_TIME_SLOTS]) {
+            preferredTimeSlots.emplace_back(timeSlotJson[DAY], timeSlotJson[START_TIME],
+                                            timeSlotJson[END_TIME]);
+        }
+        courses.emplace_back(courseName, preferredTimeSlots);
+    }
+}
+
+void University::loadInstructorsFromJson(const json& j) {
+    instructors.clear();
+    for (const auto& instructorJson : j[INSTRUCTORS]) {
+        std::string name = instructorJson[NAME];
+        std::vector<TimeSlot> availability;
+        for (const auto& timeSlotJson : instructorJson[AVAILABILITY]) {
+            availability.emplace_back(timeSlotJson[DAY], timeSlotJson[START_TIME],
+                                      timeSlotJson[END_TIME]);
+        }
+        std::vector<Course> preferredCourses;
+        for (const auto& courseJson : instructorJson[PREFERRED_COURSES]) {
+            std::string courseName = courseJson[COURSE_NAME];
+            std::vector<TimeSlot> preferredTimeSlots;
+            for (const auto& timeSlotJson : courseJson[PREFERRED_TIME_SLOTS]) {
+                preferredTimeSlots.emplace_back(timeSlotJson[DAY], timeSlotJson[START_TIME],
+                                                timeSlotJson[END_TIME]);
+            }
+            preferredCourses.emplace_back(courseName, preferredTimeSlots);
+        }
+        instructors.emplace_back(name, availability, preferredCourses);
+    }
+}
+
+void University::loadTimeSlotsFromJson(const json& j) {
+    timeSlots.clear();
+    for (const auto& timeSlotJson : j[TIME_SLOTS]) {
+        timeSlots.emplace_back(timeSlotJson[DAY], timeSlotJson[START_TIME],
+                               timeSlotJson[END_TIME]);
+    }
+}
+
 void University::loadState(const std::string& filename) {
     std::ifstream file(filename);
     if (file.is_open()) {
         json j;
         file >> j;
 
-        courses.clear();
-        for (const auto& courseJson : j["courses"]) {
-            std::string courseName = courseJson["courseName"];
-            std::vector<TimeSlot> preferredTimeSlots;
-            for (const auto& timeSlotJson : courseJson["preferredTimeSlots"]) {
-                preferredTimeSlots.emplace_back(timeSlotJson["day"], timeSlotJson["startTime"],
-                                                timeSlotJson["endTime"]);
-            }
-            courses.emplace_back(courseName, preferredTimeSlots);
-        }
-
-        instructors.clear();
-        for (const auto& instructorJson : j["instructors"]) {
-            std::string name = instructorJson["name"];
-            std::vector<TimeSlot> availability;
-            for (const auto& timeSlotJson : instructorJson["availability"]) {
-                availability.emplace_back(timeSlotJson["day"], timeSlotJson["startTime"],
-                                          timeSlotJson["endTime"]);
-            }
-            std::vector<Course> preferredCourses;
-            for (const auto& courseJson : instructorJson["preferredCourses"]) {
-                std::string courseName = courseJson["courseName"];
-                std::vector<TimeSlot> preferredTimeSlots;
-                for (const auto& timeSlotJson : courseJson["preferredTimeSlots"]) {
-                    preferredTimeSlots.emplace_back(timeSlotJson["day"], timeSlotJson["startTime"],
-                                                    timeSlotJson["endTime"]);
-                }
-                preferredCourses.emplace_back(courseName, preferredTimeSlots);
-            }
-            instructors.emplace_back(name, availability, preferredCourses);
-        }
-
-        timeSlots.clear();
-        for (const auto& timeSlotJson : j["timeSlots"]) {
-            timeSlots.emplace_back(timeSlotJson["day"], timeSlotJson["startTime"],
-                                   timeSlotJson["endTime"]);
-        }
+        loadCoursesFromJson(j);
+        loadInstructorsFromJson(j);
+        loadTimeSlotsFromJson(j);
 
         file.close();
     } else {
@@ -234,6 +257,7 @@ std::vector<std::pair<Course, std::pair<TimeSlot, Instructor>>> University::sche
     while (temperature > minTemperature) {
         // we create a new "candidate" schedule by making a small change to the current schedule
         auto newSchedule = currentSchedule;
+
         int randomIndex = std::rand() % newSchedule.size();
         TimeSlot newTimeSlot = timeSlots[std::rand() % timeSlots.size()];
         Instructor newInstructor = instructors[std::rand() % instructors.size()];

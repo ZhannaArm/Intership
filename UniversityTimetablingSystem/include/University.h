@@ -16,6 +16,7 @@
 #include "Instructor.h"
 #include "TimeSlot.h"
 #include "nlohmann/json.hpp"
+#include "Constants.h"
 /*
  * @class University
  * @brief A class to manage courses, instructors, time slots, and course scheduling.
@@ -98,11 +99,24 @@ class University {
 
     std::vector<Course> getCourses() const;
 
+
     bool courseExists(const std::string& courseName) const;
 
     Course getCourse(const std::string& courseName) const;
+  
+    json convertCoursesToJson() const;
+
+    json convertInstructorsToJson() const;
+
+    json convertTimeSlotsToJson() const;
 
     void saveState(const std::string& filename);
+
+    void loadCoursesFromJson(const json& j);
+
+    void loadInstructorsFromJson(const json& j);
+
+    void loadTimeSlotsFromJson(const json& j);
 
     void loadState(const std::string& filename);
 

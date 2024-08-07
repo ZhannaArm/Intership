@@ -4,7 +4,7 @@
 #include <string>
 
 #include "nlohmann/json.hpp"
-
+#include "Constants.h"
 /*
  * @class TimeSlot
  * @brief A class to represent a time slot with a day, start time, and end time.

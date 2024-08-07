@@ -40,7 +40,7 @@ json Instructor::toJson() const {
     }
 
     return json{
-        {"name", name}, {"availability", availabilityJson}, {"preferredCourses", coursesJson}};
+        {NAME, name}, {AVAILABILITY, availabilityJson}, {PREFERRED_COURSES, coursesJson}};
 }
 
 bool Instructor::operator==(const Instructor& other) const { return this->name == other.name; }

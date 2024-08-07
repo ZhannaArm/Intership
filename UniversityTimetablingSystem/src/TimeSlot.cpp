@@ -1,5 +1,6 @@
 #include "TimeSlot.h"
 
+
 TimeSlot::TimeSlot(const std::string& day_, const std::string& start_time, const std::string& end_time)
     : day(day_), startTime(start_time), endTime(end_time) {}
 
@@ -27,7 +28,7 @@ std::string TimeSlot::getStartTime() const { return this->startTime; }
 std::string TimeSlot::getEndTime() const { return this->endTime; }
 
 json TimeSlot::toJson() const {
-    return json{{"day", day}, {"startTime", startTime}, {"endTime", endTime}};
+    return json{{DAY, day}, {START_TIME, startTime}, {END_TIME, endTime}};
 }
 
 bool TimeSlot::operator==(const TimeSlot& other) const {

@@ -7,6 +7,7 @@
 #include "TimeSlot.h"
 #include "University.h"
 #include "argparse.h"
+#include "Constants.h"
 
 void processArgs(int argc, char** argv, University& university) {
     std::string stateFile = "result.json";
@@ -33,7 +34,7 @@ void processArgs(int argc, char** argv, University& university) {
                     std::cerr << "Error: " << e.what() << " for course " << courseName << std::endl;
                 }
             }
-
+          
             for (const auto& slot : j["availability"]) {
                 TimeSlot timeSlot(slot["day"], slot["startTime"], slot["endTime"]);
                 availability.push_back(timeSlot);

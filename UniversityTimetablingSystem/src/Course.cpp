@@ -1,6 +1,7 @@
 #include "Course.h"
 
 #include <iostream>
+#include <utility>
 
 Course::Course(const std::string& course_name, const std::vector<TimeSlot>& preferred_time_slots)
     : courseName(course_name), preferredTimeSlots(preferred_time_slots) {}
@@ -10,7 +11,7 @@ Course::Course(const Course& other)
 
 void Course::displayInfo() const {
     std::cout << "Course Name: " << courseName << std::endl;
-    std::cout << "Preferred Time Slots " << std::endl;
+    std::cout << "Preferred Time Slots: " << std::endl;
     for (const auto& timeSlot : preferredTimeSlots) {
         timeSlot.displayInfo();
     }
@@ -29,7 +30,7 @@ json Course::toJson() const {
     for (const auto& timeSlot : preferredTimeSlots) {
         timeSlotsJson.push_back(timeSlot.toJson());
     }
-    return json{{"courseName", courseName}, {"preferredTimeSlots", timeSlotsJson}};
+    return json{{COURSE_NAME, courseName}, {PREFERRED_TIME_SLOTS, timeSlotsJson}};
 }
 
 Course& Course::operator=(const Course& other) {
