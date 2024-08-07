@@ -290,16 +290,16 @@ std::vector<std::pair<Course, std::pair<TimeSlot, Instructor>>> University::sche
     return bestSchedule;  // I do this for google tests
 }
 
-std::vector<std::tuple<std::string, std::string, std::string>> University::scheduleToJsonFormat()
-    const {
-    std::vector<std::tuple<std::string, std::string, std::string>> result;
+json University::scheduleToJsonFormat() const {
+    json result = json::array();
     for (const auto& entry : Schedule) {
-        std::string courseName = entry.first.getCourseName();
-        std::string timeSlot = entry.second.first.getDay() + " " +
-                               entry.second.first.getStartTime() + "-" +
-                               entry.second.first.getEndTime();
-        std::string instructorName = entry.second.second.getName();
-        result.emplace_back(courseName, timeSlot, instructorName);
+        nlohmann::json scheduleEntry;
+        scheduleEntry["course"] = entry.first.getCourseName();
+        scheduleEntry["timeSlot"] = entry.second.first.getDay() + " " +
+                                    entry.second.first.getStartTime() + "-" +
+                                    entry.second.first.getEndTime();
+        scheduleEntry["instructor"] = entry.second.second.getName();
+        result.push_back(scheduleEntry);
     }
     return result;
 }

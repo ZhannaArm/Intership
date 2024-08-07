@@ -76,7 +76,9 @@ void processArgs(int argc, char** argv, University& university) {
             auto schedule = university.schedule();
             university.saveState(stateFile);
 
-            university.displaySchedule();
+            json universityData = university.scheduleToJsonFormat();
+
+            std::cout << universityData.dump(4) << std::endl;
 
         } else if (arg == ARG_CLEAR_FILE) {
             std::ofstream file(stateFile, std::ofstream::trunc);
@@ -89,8 +91,39 @@ void processArgs(int argc, char** argv, University& university) {
                 std::cerr << "Failed to open file " << stateFile << " for clearing." << std::endl;
             }
 
+        } else if (arg == ARG_SHOW) {
+            university.loadState(stateFile);
+
+            json universityData;
+
+            universityData["courses"] = nlohmann::json::array();
+            for (const auto& course : university.getCourses()) {
+                nlohmann::json courseData;
+                courseData["courseName"] = course.getCourseName();
+                universityData["courses"].push_back(courseData);
+            }
+
+            universityData["instructors"] = nlohmann::json::array();
+            for (const auto& instructor : university.getInstructors()) {
+                nlohmann::json instructorData;
+                instructorData["name"] = instructor.getName();
+                universityData["instructors"].push_back(instructorData);
+            }
+
+            universityData["timeSlots"] = nlohmann::json::array();
+            for (const auto& slot : university.getTimeSlots()) {
+                nlohmann::json slotData;
+                slotData["day"] = slot.getDay();
+                slotData["startTime"] = slot.getStartTime();
+                slotData["endTime"] = slot.getEndTime();
+                universityData["timeSlots"].push_back(slotData);
+            }
+
+            std::cout << universityData.dump(4) << std::endl;
+            university.saveState(stateFile);
+
         } else {
-            std::cerr << "Unknown argument: " << arg << std::endl;
+                std::cerr << "Unknown argument: " << arg << std::endl;
         }
     }
 

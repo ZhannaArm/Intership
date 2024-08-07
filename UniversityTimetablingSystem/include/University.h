@@ -123,7 +123,7 @@ class University {
 
     std::vector<std::pair<Course, std::pair<TimeSlot, Instructor>>> schedule();
 
-    std::vector<std::tuple<std::string, std::string, std::string>> scheduleToJsonFormat() const;
+    json scheduleToJsonFormat() const;
 
     void schedule_bruteForce();  // the second solution
 
