@@ -4,8 +4,8 @@
 #include <string>
 #include <vector>
 
-#include "TimeSlot.h"
 #include "Constants.h"
+#include "TimeSlot.h"
 /*
  * @class Course
  * @A class to represent a course with a name and preferred time slots.

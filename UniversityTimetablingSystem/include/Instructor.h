@@ -4,10 +4,10 @@
 #include <string>
 #include <vector>
 
+#include "Constants.h"
 #include "Course.h"
 #include "TimeSlot.h"
 #include "nlohmann/json.hpp"
-#include "Constants.h"
 /*
  * @class Instructor
  * @brief A class to represent an instructor with a name, availability, and preferred courses.

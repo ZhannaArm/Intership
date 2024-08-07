@@ -1,12 +1,11 @@
 #include <iostream>
 #include <vector>
 
+#include "Constants.h"
 #include "Course.h"
 #include "Instructor.h"
 #include "TimeSlot.h"
 #include "University.h"
-
-#include "Constants.h"
 
 void processArgs(int argc, char** argv, University& university) {
     std::string stateFile = RESULT_JSON;

@@ -12,11 +12,11 @@
 #include <string>
 #include <vector>
 
+#include "Constants.h"
 #include "Course.h"
 #include "Instructor.h"
 #include "TimeSlot.h"
 #include "nlohmann/json.hpp"
-#include "Constants.h"
 /*
  * @class University
  * @brief A class to manage courses, instructors, time slots, and course scheduling.
@@ -99,11 +99,10 @@ class University {
 
     std::vector<Course> getCourses() const;
 
-
     bool courseExists(const std::string& courseName) const;
 
     Course getCourse(const std::string& courseName) const;
-  
+
     json convertCoursesToJson() const;
 
     json convertInstructorsToJson() const;

@@ -39,8 +39,7 @@ json Instructor::toJson() const {
         coursesJson.push_back(course.toJson());
     }
 
-    return json{
-        {NAME, name}, {AVAILABILITY, availabilityJson}, {PREFERRED_COURSES, coursesJson}};
+    return json{{NAME, name}, {AVAILABILITY, availabilityJson}, {PREFERRED_COURSES, coursesJson}};
 }
 
 bool Instructor::operator==(const Instructor& other) const { return this->name == other.name; }
