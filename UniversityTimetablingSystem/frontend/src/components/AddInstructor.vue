@@ -16,6 +16,9 @@
     </div>
     <button @click="addInstructor">Add Another Instructor</button>
     <button @click="submitInstructors">Submit All Instructors</button>
+    <div v-if="message">
+      <p :class="{ 'error-message': isError }">{{ message }}</p>
+    </div>
   </div>
 </template>
 
@@ -35,6 +38,8 @@ export default {
           availability: [{ day: '', startTime: '', endTime: '' }],
         },
       ],
+      message: '',
+      isError: false
     };
   },
   methods: {
@@ -78,13 +83,6 @@ export default {
         })
         .then(response => response.json())
         .then(data => {
-          if (data.status === 'Error') {
-            console.error('Error:', data.message);
-          } else {
-            console.log('Success:', data);
-          }
-        })
-        .then(data => {
           if (data.status === 'Instructor added successfully') {
             this.message = data.status;
             this.isError = false;
@@ -92,9 +90,12 @@ export default {
             this.message = data.message || 'An error occurred';
             this.isError = true;
           }
+          console.log('Success:', data);
         })
         .catch((error) => {
           console.error('Error:', error);
+          this.message = 'An error occurred';
+          this.isError = true;
         });
       });
     },

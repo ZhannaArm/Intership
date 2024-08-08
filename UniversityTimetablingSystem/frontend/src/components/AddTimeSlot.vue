@@ -8,6 +8,9 @@
     </div>
     <button @click="addTimeSlot">Add Another Time Slot</button>
     <button @click="submitTimeSlots">Submit All Time Slots</button>
+    <div v-if="message">
+      <p :class="{ 'error-message': isError }">{{ message }}</p>
+    </div>
   </div>
 </template>
 
@@ -18,6 +21,8 @@ export default {
       timeSlots: [
         { day: '', startTime: '', endTime: '' },
       ],
+      message: '',
+      isError: false
     };
   },
   methods: {
@@ -39,19 +44,19 @@ export default {
       })
       .then(response => response.json())
       .then(data => {
-        console.log('Success:', data);
-      })
-      .then(data => {
-        if (data.status === 'Time Slot added successfully') {
+        if (data.status === 'Time Slot(s) added successfully') {
           this.message = data.status;
           this.isError = false;
         } else {
           this.message = data.message || 'An error occurred';
           this.isError = true;
         }
+        console.log('Success:', data);
       })
       .catch((error) => {
         console.error('Error:', error);
+        this.message = 'An error occurred';
+        this.isError = true;
       });
     },
   },

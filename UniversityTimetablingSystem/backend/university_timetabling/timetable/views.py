@@ -43,7 +43,7 @@ def add_instructor(request):
         except Exception as e:
             print(f"Error occurred: {e}")
             return HttpResponseBadRequest(f"Error occurred: {e}")
-    return JsonResponse({'status': 'Invalid request method'}, status=405)
+    return HttpResponseBadRequest('Invalid request method')
 
 
 @csrf_exempt
@@ -76,7 +76,7 @@ def add_course(request):
         except Exception as e:
             print(f"Error occurred: {e}")
             return HttpResponseBadRequest(f"Error occurred: {e}")
-    return JsonResponse({'status': 'Invalid request method'}, status=405)
+    return HttpResponseBadRequest('Invalid request method')
 
 @csrf_exempt
 def add_time_slot(request):
@@ -92,7 +92,6 @@ def add_time_slot(request):
                 json.dumps(data['time_slots'])
             ]
 
-
             result = subprocess.run(args, capture_output=True, text=True, check=True)
             print('Output:', result.stdout)
 
@@ -102,7 +101,7 @@ def add_time_slot(request):
             return HttpResponseBadRequest(f"Error occurred: {e}")
         except Exception as e:
             return HttpResponseBadRequest(f"Error occurred: {e}")
-    return JsonResponse({'status': 'Invalid request method'}, status=405)
+    return HttpResponseBadRequest('Invalid request method')
 
 @csrf_exempt
 def generate_schedule(request):
@@ -128,7 +127,7 @@ def generate_schedule(request):
             traceback.print_exc()
             return HttpResponseServerError(f"Error occurred: {e}")
     else:
-        return JsonResponse({'error': 'Invalid request method'}, status=405)
+        return HttpResponseBadRequest('Invalid request method')
 
 @csrf_exempt
 def show_university(request):
