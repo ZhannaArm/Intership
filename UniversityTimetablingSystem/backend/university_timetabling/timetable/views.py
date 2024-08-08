@@ -1,13 +1,17 @@
 # backend/university_timetabling/timetable/views.py
 
 from django.shortcuts import render
+import os
 import sys
 from django.http import JsonResponse, HttpResponseBadRequest, HttpResponseServerError
 from django.views.decorators.csrf import csrf_exempt
 import json
 import traceback
 
-sys.path.append('/Users/apple/intership/UniversityTimetablingSystem/build/')
+current_dir = os.path.dirname(os.path.abspath(__file__))
+project_root = os.path.abspath(os.path.join(current_dir, '../../../build'))
+sys.path.append(project_root)
+
 try:
     import university_bindings as ub
 except ImportError as e:
