@@ -13,7 +13,9 @@
     <button @click="addCourse">Add Another Course</button>
     <button @click="submitCourses">Submit All Courses</button>
     <div v-if="message">
-      <p :class="{ 'error-message': isError }">{{ message }}</p>
+      <p :class="{'success-message': !isError, 'error-message': isError}">
+        {{ message }}
+      </p>
     </div>
   </div>
 </template>
@@ -80,5 +82,15 @@ export default {
 <style>
 .course-form {
   margin-bottom: 20px;
+}
+
+.success-message {
+  color: green;
+  font-weight: bold;
+}
+
+.error-message {
+  color: red;
+  font-weight: bold;
 }
 </style>
