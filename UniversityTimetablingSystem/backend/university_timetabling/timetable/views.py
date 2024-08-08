@@ -1,7 +1,7 @@
 # backend/university_timetabling/timetable/views.py
 
 from django.shortcuts import render
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseBadRequest, HttpResponseServerError
 from django.views.decorators.csrf import csrf_exempt
 import os
 import json
@@ -21,7 +21,7 @@ def add_instructor(request):
             availability_data = data.get('availability', [])
 
             if not name:
-                return JsonResponse({'status': 'Error', 'message': 'Missing name'}, status=400)
+                return HttpResponseBadRequest('Missing name')
 
             args = [
                 os.path.join(project_root, 'UniversityTimetablingSystem'),
@@ -39,10 +39,10 @@ def add_instructor(request):
             return JsonResponse({'status': 'Instructor added successfully'})
         except subprocess.CalledProcessError as e:
             print(f"Error occurred: {e}")
-            return JsonResponse({'status': 'Error', 'message': str(e)}, status=400)
+            return HttpResponseBadRequest(f"Error occurred: {e}")
         except Exception as e:
             print(f"Error occurred: {e}")
-            return JsonResponse({'status': 'Error', 'message': str(e)}, status=400)
+            return HttpResponseBadRequest(f"Error occurred: {e}")
     return JsonResponse({'status': 'Invalid request method'}, status=405)
 
 
@@ -55,7 +55,7 @@ def add_course(request):
             preferred_time_slots_data = data.get('preferredTimeSlots', [])
 
             if not name:
-                return JsonResponse({'status': 'Error', 'message': 'Missing name'}, status=400)
+                return HttpResponseBadRequest('Missing name')
 
             args = [
                 os.path.join(project_root, 'UniversityTimetablingSystem'),
@@ -72,10 +72,10 @@ def add_course(request):
             return JsonResponse({'status': 'Course added successfully'})
         except subprocess.CalledProcessError as e:
             print(f"Error occurred: {e}")
-            return JsonResponse({'status': 'Error', 'message': str(e)}, status=400)
+            return HttpResponseBadRequest(f"Error occurred: {e}")
         except Exception as e:
             print(f"Error occurred: {e}")
-            return JsonResponse({'status': 'Error', 'message': str(e)}, status=400)
+            return HttpResponseBadRequest(f"Error occurred: {e}")
     return JsonResponse({'status': 'Invalid request method'}, status=405)
 
 @csrf_exempt
@@ -84,7 +84,7 @@ def add_time_slot(request):
         try:
             data = json.loads(request.body)
             if 'time_slots' not in data:
-                return JsonResponse({'status': 'Error', 'message': 'No time_slots in request body'}, status=400)
+                return HttpResponseBadRequest('No time_slots in request body')
 
             args = [
                 os.path.join(project_root, 'UniversityTimetablingSystem'),
@@ -99,9 +99,9 @@ def add_time_slot(request):
             return JsonResponse({'status': 'Time Slot(s) added successfully'})
         except subprocess.CalledProcessError as e:
             print(f"Error occurred: {e}")
-            return JsonResponse({'status': 'Error', 'message': str(e)}, status=400)
+            return HttpResponseBadRequest(f"Error occurred: {e}")
         except Exception as e:
-            return JsonResponse({'status': 'Error', 'message': str(e)}, status=400)
+            return HttpResponseBadRequest(f"Error occurred: {e}")
     return JsonResponse({'status': 'Invalid request method'}, status=405)
 
 @csrf_exempt
@@ -118,15 +118,15 @@ def generate_schedule(request):
 
             schedule = json.loads(result.stdout)
             if not schedule:
-                return JsonResponse({'error': 'No schedule data available'}, status=500)
+                return HttpResponseServerError('No schedule data available')
 
             return JsonResponse({'schedule': schedule})
         except subprocess.CalledProcessError as e:
             print(f"Error occurred: {e}")
-            return JsonResponse({'error': str(e)}, status=500)
+            return HttpResponseServerError(f"Error occurred: {e}")
         except Exception as e:
             traceback.print_exc()
-            return JsonResponse({'error': str(e)}, status=500)
+            return HttpResponseServerError(f"Error occurred: {e}")
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=405)
 
@@ -145,8 +145,8 @@ def show_university(request):
         return JsonResponse(university_data)
     except subprocess.CalledProcessError as e:
         print(f"Error occurred: {e}")
-        return JsonResponse({'status': 'Error', 'message': str(e)}, status=500)
+        return HttpResponseServerError(f"Error occurred: {e}")
     except Exception as e:
         print("Exception occurred:", e)
         traceback.print_exc()
-        return JsonResponse({'status': 'Error', 'message': str(e)}, status=500)
+        return HttpResponseServerError(f"Exception occurred: {e}")

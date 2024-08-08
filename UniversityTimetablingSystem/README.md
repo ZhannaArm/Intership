@@ -62,6 +62,8 @@ cd your-repository
 ```
 ###Running the Project
 The project provides several commands to manage instructors, courses, and time slots, as well as to generate the schedule.
+
+####**If you want to work with the program through the terminal, you can follow these steps:**
 ####Commands
 - **Add Time SLot**: Adds a time slot(day, start time, end time).
   ```sh
@@ -81,10 +83,23 @@ The project provides several commands to manage instructors, courses, and time s
   ```sh
   ./UniversityTimetablingSystem --schedule
   ```
+
+####**If you want to work with the program over the network, open two terminals and write this in one of them:**
+  ```sh
+  cd your-repository
+  chmod +x run-server.sh #This only needs to be done once
+  chmod +x run-frontend.sh #This only needs to be done once
+  ./run-server.sh
+  ```
+And in the other this:
+  ```sh
+  cd your-repository
+  ./run-frontend.sh
+  ```
 ###IMPORTANT
 You must add courses **BEFORE** you add instructors.
 
-####EXAMPLE 
+####EXAMPLE with running the project through the terminal
 ```sh
 ./UniversityTimetablingSystem --addTimeSlot Monday 11:00 14:00
 ./UniversityTimetablingSystem --addTimeSlot Wednesday 14:00 16:00

@@ -13,8 +13,8 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2 -Wno-inline -DNDEBUG
 set(CMAKE_CXX_FLAGS_SANITIZE "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address,undefined")
 
 #Add subdirectory for argparse and nlohmann libraries
-add_subdirectory(argparse)
-add_subdirectory(nlohmann)
+add_subdirectory(submodules/argparse)
+add_subdirectory(submodules/nlohmann)
 
 #Add source files for the UniversityTimetablingLib library
 add_library(UniversityTimetablingLib SHARED
@@ -37,8 +37,8 @@ add_executable(UniversityTimetablingSystem src/main.cpp) #Creates an executable 
 target_link_libraries(UniversityTimetablingSystem PRIVATE UniversityTimetablingLib) #Links an executable file to a dynamic library
 
 #Add Google test
-add_subdirectory(googletest)
-include_directories(googletest/googletest/include)
+add_subdirectory(submodules/googletest)
+include_directories(submodules/googletest/googletest/include)
 
 #Add executable for running tests
 add_executable(runTests tests/test_University.cpp)

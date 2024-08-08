@@ -84,6 +84,15 @@ export default {
             console.log('Success:', data);
           }
         })
+        .then(data => {
+          if (data.status === 'Instructor added successfully') {
+            this.message = data.status;
+            this.isError = false;
+          } else {
+            this.message = data.message || 'An error occurred';
+            this.isError = true;
+          }
+        })
         .catch((error) => {
           console.error('Error:', error);
         });

@@ -38,4 +38,5 @@ case "$build_type" in
         ;;
 esac
 
+make install
 make
