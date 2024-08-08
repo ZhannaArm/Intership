@@ -28,8 +28,8 @@ add_library(UniversityTimetablingLib SHARED
 target_include_directories(UniversityTimetablingLib PUBLIC
         ${CMAKE_SOURCE_DIR}/src
         ${CMAKE_SOURCE_DIR}/include
-        ${CMAKE_SOURCE_DIR}/nlohmann/include
-        ${CMAKE_SOURCE_DIR}/argparse
+        ${CMAKE_SOURCE_DIR}/submodules/nlohmann/include
+        ${CMAKE_SOURCE_DIR}/submodules/argparse
         )
 
 #Add executable for the main application
