@@ -12,6 +12,11 @@
     </div>
     <button @click="addCourse">Add Another Course</button>
     <button @click="submitCourses">Submit All Courses</button>
+    <div v-if="message">
+      <p :class="{'success-message': !isError, 'error-message': isError}">
+        {{ message }}
+      </p>
+    </div>
   </div>
 </template>
 
@@ -25,6 +30,8 @@ export default {
           preferredTimeSlots: [{ day: '', startTime: '', endTime: '' }],
         },
       ],
+      message: '',
+      isError: false
     };
   },
   methods: {
@@ -52,10 +59,19 @@ export default {
         })
         .then(response => response.json())
         .then(data => {
+          if (data.status === 'Course added successfully') {
+            this.message = data.status;
+            this.isError = false;
+          } else {
+            this.message = data.message || 'An error occurred';
+            this.isError = true;
+          }
           console.log('Success:', data);
         })
         .catch((error) => {
           console.error('Error:', error);
+          this.message = 'An error occurred';
+          this.isError = true;
         });
       });
     },
@@ -66,5 +82,15 @@ export default {
 <style>
 .course-form {
   margin-bottom: 20px;
+}
+
+.success-message {
+  color: green;
+  font-weight: bold;
+}
+
+.error-message {
+  color: red;
+  font-weight: bold;
 }
 </style>

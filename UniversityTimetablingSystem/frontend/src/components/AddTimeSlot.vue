@@ -8,6 +8,11 @@
     </div>
     <button @click="addTimeSlot">Add Another Time Slot</button>
     <button @click="submitTimeSlots">Submit All Time Slots</button>
+    <div v-if="message">
+      <p :class="{'success-message': !isError, 'error-message': isError}">
+        {{ message }}
+      </p>
+    </div>
   </div>
 </template>
 
@@ -18,6 +23,8 @@ export default {
       timeSlots: [
         { day: '', startTime: '', endTime: '' },
       ],
+      message: '',
+      isError: false
     };
   },
   methods: {
@@ -39,10 +46,19 @@ export default {
       })
       .then(response => response.json())
       .then(data => {
+        if (data.status === 'Time Slot(s) added successfully') {
+          this.message = data.status;
+          this.isError = false;
+        } else {
+          this.message = data.message || 'An error occurred';
+          this.isError = true;
+        }
         console.log('Success:', data);
       })
       .catch((error) => {
         console.error('Error:', error);
+        this.message = 'An error occurred';
+        this.isError = true;
       });
     },
   },
@@ -52,5 +68,15 @@ export default {
 <style>
 .time-slot-form {
   margin-bottom: 20px;
+}
+
+.success-message {
+  color: green;
+  font-weight: bold;
+}
+
+.error-message {
+  color: red;
+  font-weight: bold;
 }
 </style>

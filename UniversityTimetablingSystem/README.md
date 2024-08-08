@@ -22,18 +22,18 @@ This project is designed to create a timetable for university courses, assigning
 ### Methods
 
 - **TimeSlot**
-    - `displayInfo()`: Prints time slot information.
+  - `displayInfo()`: Prints time slot information.
 - **Course**
-    - `displayInfo()`: Prints course information.
+  - `displayInfo()`: Prints course information.
 - **Instructor**
-    - `displayInfo()`: Prints instructor information.
+  - `displayInfo()`: Prints instructor information.
 - **University**
-    - `addCourse(course: Course)`: Adds a course to the university.
-    - `addInstructor(instructor: Instructor)`: Adds an instructor to the university.
-    - `addTimeSlot(timeSlot: TimeSlot)`: Adds a time slot to the university.
-    - `saveState()`: Saves the current state of the university to a file in JSON format.
-    - `loadState()`: Loads the state of the university from a file in JSON format.
-    - `schedule()`: Returns a timetable that satisfies all hard constraints and as many soft constraints as possible.
+  - `addCourse(course: Course)`: Adds a course to the university.
+  - `addInstructor(instructor: Instructor)`: Adds an instructor to the university.
+  - `addTimeSlot(timeSlot: TimeSlot)`: Adds a time slot to the university.
+  - `saveState()`: Saves the current state of the university to a file in JSON format.
+  - `loadState()`: Loads the state of the university from a file in JSON format.
+  - `schedule()`: Returns a timetable that satisfies all hard constraints and as many soft constraints as possible.
 
 ### Constraints
 
@@ -55,12 +55,15 @@ To build the project, you need to have CMake installed. Run the provided `build.
 ```sh
 git clone --recurse-submodules https://github.com/your-repository
 cd your-repository
-./build.sh build   # Build the project (default to Release mode)
+./build.sh # Build the project (default to Release mode)
+./build.sh sanitize   # Build the project in Sanitize mode
 ./build.sh release # Build the project in Release mode
 ./build.sh debug   # Build the project in Debug mode
 ```
 ###Running the Project
 The project provides several commands to manage instructors, courses, and time slots, as well as to generate the schedule.
+
+####**If you want to work with the program through the terminal, you can follow these steps:**
 ####Commands
 - **Add Time SLot**: Adds a time slot(day, start time, end time).
   ```sh
@@ -80,10 +83,23 @@ The project provides several commands to manage instructors, courses, and time s
   ```sh
   ./UniversityTimetablingSystem --schedule
   ```
+
+####**If you want to work with the program over the network, open two terminals and write this in one of them:**
+  ```sh
+  cd your-repository
+  chmod +x run-server.sh #This only needs to be done once
+  chmod +x run-frontend.sh #This only needs to be done once
+  ./run-server.sh
+  ```
+And in the other this:
+  ```sh
+  cd your-repository
+  ./run-frontend.sh
+  ```
 ###IMPORTANT
 You must add courses **BEFORE** you add instructors.
 
-####EXAMPLE 
+####EXAMPLE with running the project through the terminal
 ```sh
 ./UniversityTimetablingSystem --addTimeSlot Monday 11:00 14:00
 ./UniversityTimetablingSystem --addTimeSlot Wednesday 14:00 16:00

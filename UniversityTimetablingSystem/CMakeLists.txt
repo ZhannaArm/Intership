@@ -9,12 +9,12 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -DNDEBUG")
 
 #Add subdirectory for argparse and nlohmann libraries
-add_subdirectory(argparse)
-add_subdirectory(nlohmann)
+add_subdirectory(submodules/argparse)
+add_subdirectory(submodules/nlohmann)
 
 #Include directories for header files
-include_directories(${CMAKE_SOURCE_DIR}/argparse)
-include_directories(${CMAKE_SOURCE_DIR}/nlohmann/include)
+include_directories(${CMAKE_SOURCE_DIR}/submodules/argparse)
+include_directories(${CMAKE_SOURCE_DIR}/submodules/nlohmann/include)
 
 #Add source files for the UniversityTimetablingLib library
 add_library(UniversityTimetablingLib SHARED
@@ -28,8 +28,8 @@ add_library(UniversityTimetablingLib SHARED
 target_include_directories(UniversityTimetablingLib PUBLIC
         ${CMAKE_SOURCE_DIR}/src
         ${CMAKE_SOURCE_DIR}/include
-        ${CMAKE_SOURCE_DIR}/nlohmann/include
-        ${CMAKE_SOURCE_DIR}/argparse
+        ${CMAKE_SOURCE_DIR}/submodules/nlohmann/include
+        ${CMAKE_SOURCE_DIR}/submodules/argparse
         )
 
 #Add executable for the main application
@@ -37,13 +37,13 @@ add_executable(UniversityTimetablingSystem src/main.cpp) #Creates an executable 
 target_link_libraries(UniversityTimetablingSystem PRIVATE UniversityTimetablingLib) #Links an executable file to a dynamic library
 
 # Add PyBind11
-add_subdirectory(pybind11)
+add_subdirectory(submodules/pybind11)
 pybind11_add_module(university_bindings src/university_bindings.cpp)
 target_link_libraries(university_bindings PRIVATE UniversityTimetablingLib)
 
 #Add Google test
-add_subdirectory(googletest)
-include_directories(googletest/googletest/include)
+add_subdirectory(submodules/googletest)
+include_directories(submodules/googletest/googletest/include)
 
 #Add executable for running tests
 #add_executable(runTests tests/test_University.cpp)

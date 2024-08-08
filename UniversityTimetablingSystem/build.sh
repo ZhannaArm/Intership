@@ -1,19 +1,42 @@
 #!/bin/bash
 
-BUILD_TYPE="Release"
+build_type="release"
 
-if [ "$1" == "debug" ]; then
-    BUILD_TYPE="Debug"
-elif [ "$1" == "release" ]; then
-    BUILD_TYPE="Release"
-elif [ "$1" == "build" ]; then
-    BUILD_TYPE="Release"
-else
-    echo "Usage: $0 {build|release|debug}"
-    exit 1
+if [ $# -gt 0 ]; then
+    case "$1" in
+        debug)
+            build_type="debug"
+            ;;
+        release)
+            build_type="release"
+            ;;
+        sanitize)
+            build_type="sanitize"
+            ;;
+        *)
+            echo "Invalid argument: $1"
+            echo "Usage: $0 [debug|release|sanitize]"
+            exit 1
+            ;;
+    esac
 fi
 
 mkdir -p build
 cd build
-cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE ..
+case "$build_type" in
+    debug)
+        echo "Building in debug mode..."
+        cmake -DCMAKE_BUILD_TYPE=Debug ..
+        ;;
+    release)
+        echo "Building in release mode..."
+        cmake -DCMAKE_BUILD_TYPE=Release ..
+        ;;
+    sanitize)
+        echo "Building in sanitize mode..."
+        cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DSANITIZE=ON ..
+        ;;
+esac
+
+make install
 make

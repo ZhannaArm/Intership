@@ -25,6 +25,7 @@ constexpr auto ARG_PREFERRED_COURSES = "--preferredCourses";
 constexpr auto ARG_PREFERRED_TIME_SLOTS = "--preferredTimeSlots";
 constexpr auto ARG_CLEAR_FILE = "--clearFile";
 constexpr auto ARG_STATE_FILE = "--stateFile";
+constexpr auto ARG_SHOW = "--showUniversity";
 
 constexpr auto RESULT_JSON = "result.json";
 
