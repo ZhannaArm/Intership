@@ -4,10 +4,10 @@
 #include <string>
 #include <vector>
 
+#include "Constants.h"
 #include "Course.h"
 #include "TimeSlot.h"
 #include "nlohmann/json.hpp"
-
 /*
  * @class Instructor
  * @brief A class to represent an instructor with a name, availability, and preferred courses.
@@ -63,8 +63,8 @@ class Instructor {
    public:
     Instructor() = default;
 
-    Instructor(std::string name_, std::vector<TimeSlot> availability_,
-               std::vector<Course> preferred_courses);
+    Instructor(const std::string& name_, const std::vector<TimeSlot>& availability_,
+               const std::vector<Course>& preferred_courses);
 
     void displayInfo() const;
 

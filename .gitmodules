@@ -1,9 +1,9 @@
-[submodule "UniversityTimetablingSystem/argparse"]
-	path = UniversityTimetablingSystem/argparse
+[submodule "UniversityTimetablingSystem/submodules/argparse"]
+	path = UniversityTimetablingSystem/submodules/argparse
 	url = https://github.com/jamolnng/argparse.git
-[submodule "UniversityTimetablingSystem/googletest"]
-	path = UniversityTimetablingSystem/googletest
+[submodule "UniversityTimetablingSystem/submodules/googletest"]
+	path = UniversityTimetablingSystem/submodules/googletest
 	url = https://github.com/google/googletest.git
-[submodule "UniversityTimetablingSystem/nlohmann"]
-	path = UniversityTimetablingSystem/nlohmann
+[submodule "UniversityTimetablingSystem/submodules/nlohmann"]
+	path = UniversityTimetablingSystem/submodules/nlohmann
 	url = https://github.com/nlohmann/json.git

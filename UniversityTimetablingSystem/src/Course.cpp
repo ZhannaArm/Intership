@@ -3,8 +3,11 @@
 #include <iostream>
 #include <utility>
 
-Course::Course(std::string course_name, std::vector<TimeSlot> preferred_time_slots)
-    : courseName(std::move(course_name)), preferredTimeSlots(std::move(preferred_time_slots)) {}
+Course::Course(const std::string& course_name, const std::vector<TimeSlot>& preferred_time_slots)
+    : courseName(course_name), preferredTimeSlots(preferred_time_slots) {}
+
+Course::Course(const Course& other)
+    : courseName(other.courseName), preferredTimeSlots(other.preferredTimeSlots) {}
 
 void Course::displayInfo() const {
     std::cout << "Course Name: " << courseName << std::endl;
@@ -28,6 +31,14 @@ json Course::toJson() const {
         timeSlotsJson.push_back(timeSlot.toJson());
     }
     return json{{COURSE_NAME, courseName}, {PREFERRED_TIME_SLOTS, timeSlotsJson}};
+}
+
+Course& Course::operator=(const Course& other) {
+    if (this != &other) {
+        courseName = other.courseName;
+        preferredTimeSlots = other.preferredTimeSlots;
+    }
+    return *this;
 }
 
 bool Course::operator==(const Course& other) const { return courseName == other.courseName; }
