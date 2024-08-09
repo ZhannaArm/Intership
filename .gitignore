@@ -14,3 +14,15 @@ build/
 
 # MacOS-specific files
 .DS_Store
+
+UniversityTimetablingSystem/cmake-build-debug/
+UniversityTimetablingSystem/backend/result.json
+UniversityTimetablingSystem/venv/
+.gitignore.save
+.gitmodules.bak
+.gitmodules.save
+.gitmodules.swo
+UniversityTimetablingSystem/.clang-format
+UniversityTimetablingSystem/frontend/src/components/ClearFile.vue
+cmake-build-debug/
+
