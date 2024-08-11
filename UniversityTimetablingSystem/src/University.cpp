@@ -294,11 +294,11 @@ json University::scheduleToJsonFormat() const {
     json result = json::array();
     for (const auto& entry : Schedule) {
         nlohmann::json scheduleEntry;
-        scheduleEntry["course"] = entry.first.getCourseName();
-        scheduleEntry["timeSlot"] = entry.second.first.getDay() + " " +
+        scheduleEntry[COURSE] = entry.first.getCourseName();
+        scheduleEntry[TIME_SLOT] = entry.second.first.getDay() + " " +
                                     entry.second.first.getStartTime() + "-" +
                                     entry.second.first.getEndTime();
-        scheduleEntry["instructor"] = entry.second.second.getName();
+        scheduleEntry[INSTRUCTOR] = entry.second.second.getName();
         result.push_back(scheduleEntry);
     }
     return result;
