@@ -35,6 +35,7 @@ target_include_directories(UniversityTimetablingLib PUBLIC
 add_executable(UniversityTimetablingSystem src/main.cpp) #Creates an executable from main.cpp
 target_link_libraries(UniversityTimetablingSystem PRIVATE UniversityTimetablingLib) #Links an executable file to a dynamic library
 
+set(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR})
 #Add Google test
 add_subdirectory(submodules/googletest)
 include_directories(submodules/googletest/googletest/include)
