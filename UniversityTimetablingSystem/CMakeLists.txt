@@ -44,6 +44,18 @@ include_directories(submodules/googletest/googletest/include)
 add_executable(runTests tests/test_University.cpp)
 target_link_libraries(runTests PRIVATE UniversityTimetablingLib gtest gtest_main)
 
+#Install UniversityTimetablingLib to lib directory
+install(TARGETS UniversityTimetablingLib
+        LIBRARY DESTINATION ${CMAKE_SOURCE_DIR}/lib)
+
+#Install UniversityTimetablingSystem executable to bin directory
+install(TARGETS UniversityTimetablingSystem
+        RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/bin)
+
+#Install runTests executable to bin directory
+install(TARGETS runTests
+        RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/bin)
+
 #Enable testing
 #enable_testing()
 

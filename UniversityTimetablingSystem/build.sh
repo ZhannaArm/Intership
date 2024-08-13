@@ -10,12 +10,9 @@ if [ $# -gt 0 ]; then
         release)
             build_type="release"
             ;;
-        sanitize)
-            build_type="sanitize"
-            ;;
         *)
             echo "Invalid argument: $1"
-            echo "Usage: $0 [debug|release|sanitize]"
+            echo "Usage: $0 [debug|release]"
             exit 1
             ;;
     esac
@@ -31,10 +28,6 @@ case "$build_type" in
     release)
         echo "Building in release mode..."
         cmake -DCMAKE_BUILD_TYPE=Release ..
-        ;;
-    sanitize)
-        echo "Building in sanitize mode..."
-        cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DSANITIZE=ON ..
         ;;
 esac
 
