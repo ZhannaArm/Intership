@@ -18,8 +18,20 @@ if [ $# -gt 0 ]; then
     esac
 fi
 
+echo "Building GoogleTest..."
+cd submodules/googletest
 mkdir -p build
 cd build
+rm -rf CMakeCache.txt CMakeFiles
+cmake -DCMAKE_INSTALL_PREFIX="../bin" ..
+make
+make install
+cd ../../..
+
+echo "GoogleTest installed to ${install_dir}"
+mkdir -p build
+cd build
+
 case "$build_type" in
     debug)
         echo "Building in debug mode..."
