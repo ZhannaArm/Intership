@@ -9,7 +9,6 @@ constexpr auto PREFERRED_TIME_SLOTS = "preferredTimeSlots";
 constexpr auto NAME = "name";
 constexpr auto TIME_SLOT = "timeSlot";
 constexpr auto INSTRUCTOR = "instructor";
-constexpr auto
 constexpr auto AVAILABILITY = "availability";
 constexpr auto PREFERRED_COURSES = "preferredCourses";
 constexpr auto COURSE = "course";
