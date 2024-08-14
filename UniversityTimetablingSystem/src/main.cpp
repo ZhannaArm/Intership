@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <fstream>
 
 #include "Constants.h"
 #include "Course.h"
@@ -27,6 +28,17 @@ int main(int argc, char** argv) {
         program.print_help();
         return 1;
     }
+
+    std::ifstream file;
+    file.open(RESULT_JSON);
+    if (file){
+        std::cout << "File exists" << std::endl;
+
+    } else {
+        std::cout << "File does not exists" << std::endl;
+        std::ofstream outfile (RESULT_JSON);
+    }
+
     University rau;
     rau.loadState(RESULT_JSON);
 

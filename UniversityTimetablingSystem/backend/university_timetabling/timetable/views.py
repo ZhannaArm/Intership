@@ -13,7 +13,9 @@ project_root = os.path.abspath(os.path.join(current_dir, '../../../bin'))
 
 @csrf_exempt
 def add_instructor(request):
-    if request.method == 'POST':
+    if request.method != 'POST':
+        return HttpResponseBadRequest('Invalid request method')
+    else:
         try:
             data = json.loads(request.body)
             name = data.get('name')
@@ -37,7 +39,6 @@ def add_instructor(request):
             for slot in availability_data:
                 args.extend([slot['day'], slot['startTime'], slot['endTime']])
 
-            print(args)
             result = subprocess.run(args, capture_output=True, text=True, check=True)
             print('Output:', result.stdout)
 
@@ -48,12 +49,12 @@ def add_instructor(request):
         except Exception as e:
             print(f"Error occurred: {e}")
             return HttpResponseBadRequest(f"Error occurred: {e}")
-    return HttpResponseBadRequest('Invalid request method')
-
 
 @csrf_exempt
 def add_course(request):
-    if request.method == 'POST':
+    if request.method != 'POST':
+        return HttpResponseBadRequest('Invalid request method')
+    else:
         try:
             data = json.loads(request.body)
             name = data.get('courseName')
@@ -70,9 +71,8 @@ def add_course(request):
             ]
 
             for slot in preferred_time_slots_data:
-                 args.extend([slot['day'], slot['startTime'], slot['endTime']])
+                args.extend([slot['day'], slot['startTime'], slot['endTime']])
 
-            print(args)
             result = subprocess.run(args, capture_output=True, text=True, check=True)
             print('Output:', result.stdout)
 
@@ -83,11 +83,12 @@ def add_course(request):
         except Exception as e:
             print(f"Error occurred: {e}")
             return HttpResponseBadRequest(f"Error occurred: {e}")
-    return HttpResponseBadRequest('Invalid request method')
 
 @csrf_exempt
 def add_time_slot(request):
-    if request.method == 'POST':
+    if request.method != 'POST':
+        return HttpResponseBadRequest('Invalid request method')
+    else:
         try:
             data = json.loads(request.body)
             if 'time_slots' not in data:
@@ -110,11 +111,12 @@ def add_time_slot(request):
             return HttpResponseBadRequest(f"Error occurred: {e}")
         except Exception as e:
             return HttpResponseBadRequest(f"Error occurred: {e}")
-    return HttpResponseBadRequest('Invalid request method')
 
 @csrf_exempt
 def generate_schedule(request):
-    if request.method == 'POST':
+    if request.method != 'POST':
+        return HttpResponseBadRequest('Invalid request method')
+    else:
         try:
             args = [
                 os.path.join(project_root, 'UniversityTimetablingSystem'),
@@ -135,8 +137,6 @@ def generate_schedule(request):
         except Exception as e:
             traceback.print_exc()
             return HttpResponseServerError(f"Error occurred: {e}")
-    else:
-        return HttpResponseBadRequest('Invalid request method')
 
 @csrf_exempt
 def show_university(request):
