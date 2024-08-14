@@ -6,77 +6,97 @@
 #include "Instructor.h"
 #include "TimeSlot.h"
 #include "University.h"
+#include "argparse.h"
 
-void processArgs(int argc, char** argv, University& university) {
-    int i = 0;
-    std::string arg = argv[i];
+int main(int argc, char** argv) {
+    argparse::ArgumentParser program("UniversityTimetablingSystem", "University");
 
-    if (arg == ARG_ADD_INSTRUCTOR) {
-        university.loadState(RESULT_JSON);
-        std::string instructorJson = argv[++i];
-        json j = json::parse(instructorJson);
+    program.add_argument(ARG_ADD_INSTRUCTOR, "Add a new instructor", false);
+    program.add_argument(ARG_ADD_COURSE, "Add a new course", false);
+    program.add_argument(ARG_ADD_TIME_SLOT, "Add a new time slot", false);
+    program.add_argument(ARG_SCHEDULE, "Generate the schedule", false);
+    program.add_argument(ARG_CLEAR_FILE, "Clear the result.json file", false);
+    program.add_argument(ARG_SHOW, "Show the university information", false);
+    program.add_argument(ARG_AVAILABILITY, "Add instructor's availability", false);
+    program.add_argument(ARG_PREFERRED_COURSES, "Add instructor's preferred courses", false);
+    program.add_argument(ARG_PREFERRED_TIME_SLOTS, "Add course's preferred time slots", false);
+
+    auto result = program.parse(argc, const_cast<const char**>(argv));
+    if (result) {
+        std::cerr << "Error: " << result.what() << std::endl;
+        program.print_help();
+        return 1;
+    }
+    University rau;
+    rau.loadState(RESULT_JSON);
+
+    if (program.exists(ARG_ADD_INSTRUCTOR)) {
+        auto instructorName = program.get<std::string>(ADD_INSTRUCTOR);
         std::vector<Course> preferredCourses;
         std::vector<TimeSlot> availability;
 
-        std::string instructorName = j[NAME];
-        for (const auto& courseJson : j[PREFERRED_COURSES]) {
-            std::string courseName = courseJson[COURSE_NAME];
-            try {
-                Course course = university.getCourse(courseName);
-                preferredCourses.push_back(course);
-            } catch (const std::runtime_error& e) {
-                std::cerr << "Error: " << e.what() << " for course " << courseName << std::endl;
+        if(program.exists(ARG_PREFERRED_COURSES)){
+            auto courses = program.get<std::vector<std::string>>(PREFERRED_COURSES);
+            for (const auto& courseName : courses) {
+                try {
+                    Course course = rau.getCourse(courseName);
+                    preferredCourses.push_back(course);
+                } catch (const std::runtime_error& e) {
+                    std::cerr << "Error: " << e.what() << " for course " << courseName << std::endl;
+                }
             }
         }
 
-        for (const auto& slot : j[AVAILABILITY]) {
-            TimeSlot timeSlot(slot[DAY], slot[START_TIME], slot[END_TIME]);
-            availability.push_back(timeSlot);
+        if(program.exists(ARG_AVAILABILITY)){
+            auto availabilityArgs = program.get<std::vector<std::string>>(AVAILABILITY);
+            for (size_t i = 0; i < availabilityArgs.size(); i += 3) {
+                TimeSlot slot(availabilityArgs[i], availabilityArgs[i + 1],
+                              availabilityArgs[i + 2]);
+                availability.push_back(slot);
+            }
         }
 
         Instructor instructor(instructorName, availability, preferredCourses);
-        university.addInstructor(instructor);
-        university.saveState(RESULT_JSON);
+        rau.addInstructor(instructor);
 
-    } else if (arg == ARG_ADD_COURSE) {
-        university.loadState(RESULT_JSON);
-        std::string courseJson = argv[++i];
-        json j = json::parse(courseJson);
+        rau.saveState(RESULT_JSON);
 
-        std::string courseName = j[COURSE_NAME];
+    } else if (program.exists(ARG_ADD_COURSE)) {
+        auto courseName = program.get<std::string>(ADD_COURSE);
         std::vector<TimeSlot> preferredTimeSlots;
-        for (const auto& ts : j[PREFERRED_TIME_SLOTS]) {
-            TimeSlot timeSlot(ts[DAY], ts[START_TIME], ts[END_TIME]);
-            preferredTimeSlots.push_back(timeSlot);
+
+        if(program.exists(ARG_PREFERRED_TIME_SLOTS)){
+            auto timeSlotArgs = program.get<std::vector<std::string>>(PREFERRED_TIME_SLOTS);
+            for (size_t i = 0; i < timeSlotArgs.size(); i += 3) {
+                TimeSlot slot(timeSlotArgs[i], timeSlotArgs[i + 1], timeSlotArgs[i + 2]);
+                preferredTimeSlots.push_back(slot);
+            }
         }
 
         Course course(courseName, preferredTimeSlots);
-        std::cout << "COURSE: ";
-        course.displayInfo();
-        university.addCourse(course);
-        university.saveState(RESULT_JSON);
+        rau.addCourse(course);
 
-    } else if (arg == ARG_ADD_TIME_SLOT) {
-        university.loadState(RESULT_JSON);
-        std::string timeSlotArg = argv[++i];
-        json timeSlotJson = json::parse(timeSlotArg);
+        rau.saveState(RESULT_JSON);
 
-        for (const auto& slot : timeSlotJson) {
-            TimeSlot timeSlot(slot[DAY], slot[START_TIME], slot[END_TIME]);
-            university.addTimeSlot(timeSlot);
-        }
-        university.saveState(RESULT_JSON);
+    } else if (program.exists(ARG_ADD_TIME_SLOT)) {
+        auto timeSlotArgs = program.get<std::vector<std::string>>(ADD_TIMESLOT);
+        std::string day = timeSlotArgs[0];
+        std::string startTime = timeSlotArgs[1];
+        std::string endTime = timeSlotArgs[2];
+        TimeSlot timeSlot(day, startTime, endTime);
+        rau.addTimeSlot(timeSlot);
 
-    } else if (arg == ARG_SCHEDULE) {
-        university.loadState(RESULT_JSON);
-        auto schedule = university.schedule();
-        university.saveState(RESULT_JSON);
+        rau.saveState(RESULT_JSON);
 
-        json universityData = university.scheduleToJsonFormat();
+    } else if (program.exists(ARG_SCHEDULE)) {
+        auto schedule = rau.schedule();
+        rau.saveState(RESULT_JSON);
+
+        json universityData = rau.scheduleToJsonFormat();
 
         std::cout << universityData.dump(4) << std::endl;
 
-    } else if (arg == ARG_CLEAR_FILE) {
+    } else if (program.exists(ARG_CLEAR_FILE)) {
         std::ofstream file(RESULT_JSON, std::ofstream::trunc);
         if (file) {
             json emptyJson = json::object();
@@ -87,27 +107,25 @@ void processArgs(int argc, char** argv, University& university) {
             std::cerr << "Failed to open file " << RESULT_JSON << " for clearing." << std::endl;
         }
 
-    } else if (arg == ARG_SHOW) {
-        university.loadState(RESULT_JSON);
-
+    } else if (program.exists(ARG_SHOW)) {
         json universityData;
 
         universityData[COURSES] = nlohmann::json::array();
-        for (const auto& course : university.getCourses()) {
+        for (const auto& course : rau.getCourses()) {
             nlohmann::json courseData;
             courseData[COURSE_NAME] = course.getCourseName();
             universityData[COURSES].push_back(courseData);
         }
 
         universityData[INSTRUCTORS] = nlohmann::json::array();
-        for (const auto& instructor : university.getInstructors()) {
+        for (const auto& instructor : rau.getInstructors()) {
             nlohmann::json instructorData;
             instructorData[NAME] = instructor.getName();
             universityData[INSTRUCTORS].push_back(instructorData);
         }
 
         universityData[TIME_SLOTS] = nlohmann::json::array();
-        for (const auto& slot : university.getTimeSlots()) {
+        for (const auto& slot : rau.getTimeSlots()) {
             nlohmann::json slotData;
             slotData[DAY] = slot.getDay();
             slotData[START_TIME] = slot.getStartTime();
@@ -116,16 +134,9 @@ void processArgs(int argc, char** argv, University& university) {
         }
 
         std::cout << universityData.dump(4) << std::endl;
-        university.saveState(RESULT_JSON);
+        rau.saveState(RESULT_JSON);
 
-    } else {
-            std::cerr << "Unknown argument: " << arg << std::endl;
     }
-}
 
-int main(int argc, char** argv) {
-    University university;
-
-    processArgs(argc, argv, university);
     return 0;
 }

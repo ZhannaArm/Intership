@@ -9,7 +9,7 @@ import traceback
 import subprocess
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
-project_root = os.path.abspath(os.path.join(current_dir, '../../../build'))
+project_root = os.path.abspath(os.path.join(current_dir, '../../../bin'))
 
 @csrf_exempt
 def add_instructor(request):
@@ -26,13 +26,18 @@ def add_instructor(request):
             args = [
                 os.path.join(project_root, 'UniversityTimetablingSystem'),
                 '--addInstructor',
-                json.dumps({
-                    'name': name,
-                    'preferredCourses': preferred_courses_data,
-                    'availability': availability_data
-                })
+                name,
+                '--preferredCourses',
             ]
 
+            for course in preferred_courses_data:
+                args.extend([course['courseName']])
+
+            args.extend(['--availability'])
+            for slot in availability_data:
+                args.extend([slot['day'], slot['startTime'], slot['endTime']])
+
+            print(args)
             result = subprocess.run(args, capture_output=True, text=True, check=True)
             print('Output:', result.stdout)
 
@@ -60,12 +65,14 @@ def add_course(request):
             args = [
                 os.path.join(project_root, 'UniversityTimetablingSystem'),
                 '--addCourse',
-                json.dumps({
-                    'courseName': name,
-                    'preferredTimeSlots': preferred_time_slots_data
-                })
+                name,
+                '--preferredTimeSlots',
             ]
 
+            for slot in preferred_time_slots_data:
+                 args.extend([slot['day'], slot['startTime'], slot['endTime']])
+
+            print(args)
             result = subprocess.run(args, capture_output=True, text=True, check=True)
             print('Output:', result.stdout)
 
@@ -89,8 +96,10 @@ def add_time_slot(request):
             args = [
                 os.path.join(project_root, 'UniversityTimetablingSystem'),
                 '--addTimeSlot',
-                json.dumps(data['time_slots'])
             ]
+
+            for slot in data['time_slots']:
+                args.extend([slot['day'], slot['startTime'], slot['endTime']])
 
             result = subprocess.run(args, capture_output=True, text=True, check=True)
             print('Output:', result.stdout)
