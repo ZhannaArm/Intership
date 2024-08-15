@@ -131,6 +131,7 @@ def create_and_add_instructor(name, preferred_courses, availability):
     instructors_collection.insert(instructor)
     return None
 
+
 @csrf_exempt
 def add_course(request):
     if request.method == 'POST':
@@ -230,11 +231,13 @@ def generate_schedule(request):
     else:
         return HttpResponseBadRequest('Invalid request method')
 
+
 def ensure_collections_exist():
     collections = [University.COURSES, University.INSTRUCTORS, University.TIME_SLOTS]
     for collection in collections:
         if not db.has_collection(collection):
             db.create_collection(collection)
+
 
 def load_courses():
     courses = list(db.collection(University.COURSES).all())
@@ -254,6 +257,7 @@ def load_courses():
         py_courses.append(ub.Course(course_name, preferredTimeSlots))
 
     return py_courses
+
 
 def load_instructors(py_courses):
     instructors = list(db.collection(University.INSTRUCTORS).all())
@@ -290,6 +294,7 @@ def load_instructors(py_courses):
 
     return py_instructors
 
+
 def load_time_slots():
     time_slots = list(db.collection(University.TIME_SLOTS).all())
     py_time_slots = []
@@ -302,6 +307,7 @@ def load_time_slots():
 
     return py_time_slots
 
+
 def build_university(py_courses, py_instructors, py_time_slots):
     university = ub.University()
     for course in py_courses:
@@ -312,6 +318,7 @@ def build_university(py_courses, py_instructors, py_time_slots):
         university.addTimeSlot(time_slot)
 
     return university
+
 
 def generate_university_schedule(university):
     schedule = university.schedule()
@@ -334,4 +341,4 @@ def show_university(request):
     except Exception as e:
         print("Exception occurred:", e)
         traceback.print_exc()
-        return HttpResponseServerError(str(e))
+        return HttpResponseServerError(str(e))    
