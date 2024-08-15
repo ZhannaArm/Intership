@@ -53,10 +53,8 @@ This project is designed to create a timetable for university courses, assigning
 To build the project, you need to have CMake installed. Run the provided `build.sh` script. This script supports three modes: `build`, `release`, and `debug`.
 
 ```sh
-git clone --recurse-submodules https://github.com/your-repository
-cd your-repository
+git submodule update --init --recursive
 ./build.sh # Build the project (default to Release mode)
-./build.sh sanitize   # Build the project in Sanitize mode
 ./build.sh release # Build the project in Release mode
 ./build.sh debug   # Build the project in Debug mode
 ```
@@ -84,32 +82,40 @@ The project provides several commands to manage instructors, courses, and time s
   ./UniversityTimetablingSystem --schedule
   ```
 
-####**If you want to work with the program over the network, open two terminals and write this in one of them:**
+####**If you want to work with the program over the network, open three terminals and write this in one of them:**
   ```sh
   cd your-repository
   chmod +x run-server.sh #This only needs to be done once
   chmod +x run-frontend.sh #This only needs to be done once
+  chmod +x run-database.sh #This only needs to be done once
+  python3 setup.py install #This needs to be written if there are no collections and they need to be created
   ./run-server.sh
   ```
-And in the other this:
+Write this in the second terminal:
   ```sh
   cd your-repository
   ./run-frontend.sh
+  ```
+
+Write this in the third terminal:
+  ```sh
+  cd your-repository
+  ./run-database.sh
   ```
 ###IMPORTANT
 You must add courses **BEFORE** you add instructors.
 
 ####EXAMPLE with running the project through the terminal
 ```sh
-./UniversityTimetablingSystem --addTimeSlot Monday 11:00 14:00
-./UniversityTimetablingSystem --addTimeSlot Wednesday 14:00 16:00
-./UniversityTimetablingSystem --addTimeSlot Tuesday 11:00 13:00
-./UniversityTimetablingSystem --addCourse Mathematics --preferredTimeSlots Tuesday 11:00 13:00
-./UniversityTimetablingSystem --addCourse History --preferredTimeSlots Monday 10:00 12:00 Wednesday 13:00 15:00
-./UniversityTimetablingSystem --addCourse Physics --preferredTimeSlots Wednesday 14:00 16:00 Monday 11:00 14:00
-./UniversityTimetablingSystem --addInstructor James --preferredCourses Mathematics Physics
+./bin/UniversityTimetablingSystem --addTimeSlot Monday 11:00 14:00
+./bin/UniversityTimetablingSystem --addTimeSlot Wednesday 14:00 16:00
+./bin/UniversityTimetablingSystem --addTimeSlot Tuesday 11:00 13:00
+./bin/UniversityTimetablingSystem --addCourse Mathematics --preferredTimeSlots Tuesday 11:00 13:00
+./bin/UniversityTimetablingSystem --addCourse History --preferredTimeSlots Monday 10:00 12:00 Wednesday 13:00 15:00
+./bin/UniversityTimetablingSystem --addCourse Physics --preferredTimeSlots Wednesday 14:00 16:00 Monday 11:00 14:00
+./bin/UniversityTimetablingSystem --addInstructor James --preferredCourses Mathematics Physics
      --availability Monday 09:00 12:00 Wednesday 14:00 16:00 Tuesday 11:00 13:00
-./UniversityTimetablingSystem --addInstructor Sara --preferredCourses History --availability Monday 10:00 12:00
+./bin/UniversityTimetablingSystem --addInstructor Sara --preferredCourses History --availability Monday 10:00 12:00
      Wednesday 14:00 16:00 Friday 11:00 14:00
-./UniversityTimetablingSystem --schedule
+./bin/UniversityTimetablingSystem --schedule
 ```

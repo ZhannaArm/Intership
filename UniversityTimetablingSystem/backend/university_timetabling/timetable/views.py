@@ -12,26 +12,11 @@ import traceback
 
 client = ArangoClient(hosts="http://localhost:8529")
 sys_db = client.db('_system', username='root', password='openSesame')
-
-if not sys_db.has_database('university_db'):
-    sys_db.create_database('university_db')
-
 db = client.db('university_db', username='root', password='openSesame')
 
-if not db.has_collection('instructors'):
-    instructors_collection = db.create_collection('instructors')
-else:
-    instructors_collection = db.collection('instructors')
-
-if not db.has_collection('courses'):
-    courses_collection = db.create_collection('courses')
-else:
-    courses_collection = db.collection('courses')
-
-if not db.has_collection('timeslots'):
-    timeslots_collection = db.create_collection('timeslots')
-else:
-    timeslots_collection = db.collection('timeslots')
+instructors_collection = db.collection('instructors')
+courses_collection = db.collection('courses')
+timeslots_collection = db.collection('timeslots')
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 project_root = os.path.abspath(os.path.join(current_dir, os.pardir, os.pardir, os.pardir, "build"))
@@ -158,10 +143,10 @@ def add_time_slot(request):
             if 'time_slots' not in data:
                 return HttpResponseBadRequest('No time_slots in request body')
 
-            for ts in data['time_slots']:
-                day = ts.get('day')
-                start_time = ts.get('startTime')
-                end_time = ts.get('endTime')
+            for timeSlot in data['time_slots']:
+                day = timeSlot.get('day')
+                start_time = timeSlot.get('startTime')
+                end_time = timeSlot.get('endTime')
 
                 if not day or not start_time or not end_time:
                     return HttpResponseBadRequest('Missing fields in time slot')
@@ -200,25 +185,25 @@ def generate_schedule(request):
             time_slots = list(db.collection('timeslots').all())
 
             py_courses = []
-            for c in courses:
-                course_name = c.get('courseName')
-                preferred_time_slots = c.get('preferredTimeSlots', [])
+            for course in courses:
+                course_name = course.get('courseName')
+                preferred_time_slots = course.get('preferredTimeSlots', [])
 
                 if not course_name:
-                    print(f"Skipping course due to missing 'courseName': {c}")
+                    print(f"Skipping course due to missing 'courseName': {course}")
                     continue
 
                 preferredTimeSlots = [ub.TimeSlot(slot['day'], slot['startTime'], slot['endTime']) for slot in preferred_time_slots]
                 py_courses.append(ub.Course(course_name, preferredTimeSlots))
 
             py_instructors = []
-            for i in instructors:
-                name = i.get('name')
-                availability_data = i.get('availability', [])
-                preferred_courses_data = i.get('preferredCourses', [])
+            for instructor in instructors:
+                name = instructor.get('name')
+                availability_data = instructor.get('availability', [])
+                preferred_courses_data = instructor.get('preferredCourses', [])
 
                 if not name:
-                    print(f"Skipping instructor due to missing 'name': {i}")
+                    print(f"Skipping instructor due to missing 'name': {instructor}")
                     continue
 
                 availability = [ub.TimeSlot(slot['day'], slot['startTime'], slot['endTime']) for slot in availability_data]
@@ -241,10 +226,10 @@ def generate_schedule(request):
                 py_instructors.append(ub.Instructor(name, availability, preferred_courses))
 
             py_time_slots = []
-            for t in time_slots:
-                day = t.get('day')
-                start_time = t.get('startTime')
-                end_time = t.get('endTime')
+            for timeSlot in time_slots:
+                day = timeSlot.get('day')
+                start_time = timeSlot.get('startTime')
+                end_time = timeSlot.get('endTime')
 
                 py_time_slots.append(ub.TimeSlot(day, start_time, end_time))
 
