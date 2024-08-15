@@ -87,8 +87,8 @@ The project provides several commands to manage instructors, courses, and time s
   cd your-repository
   chmod +x run-server.sh #This only needs to be done once
   chmod +x run-frontend.sh #This only needs to be done once
-  chmod +x run-database.sh #This only needs to be done once
   python3 setup.py install #This needs to be written if there are no collections and they need to be created
+  chmod +x run-database.sh #This only needs to be done once
   ./run-server.sh
   ```
 Write this in the second terminal:

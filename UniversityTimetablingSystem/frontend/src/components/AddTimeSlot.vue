@@ -42,7 +42,7 @@ export default {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ time_slots: validTimeSlots }),
+        body: JSON.stringify({ timeSlots: validTimeSlots }),
       })
       .then(response => response.json())
       .then(data => {
