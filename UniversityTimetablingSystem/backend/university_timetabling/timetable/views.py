@@ -9,14 +9,18 @@ from arango import ArangoClient
 import json
 import traceback
 
+current_dir = os.path.dirname(os.path.abspath(__file__))
+project_root = os.path.abspath(os.path.join(current_dir, os.pardir, os.pardir, os.pardir))
+sys.path.append(project_root)
+from static_variables import University
 
 client = ArangoClient(hosts="http://localhost:8529")
 sys_db = client.db('_system', username='root', password='openSesame')
-db = client.db('university_db', username='root', password='openSesame')
+db = client.db(University.UNIVERSITY, username='root', password='openSesame')
 
-instructors_collection = db.collection('instructors')
-courses_collection = db.collection('courses')
-timeslots_collection = db.collection('timeslots')
+instructors_collection = db.collection(University.INSTRUCTORS)
+courses_collection = db.collection(University.COURSES)
+timeslots_collection = db.collection(University.TIME_SLOTS)
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 project_root = os.path.abspath(os.path.join(current_dir, os.pardir, os.pardir, os.pardir, "build"))
@@ -35,9 +39,9 @@ def add_instructor(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-            name = data.get('name')
-            preferred_courses_data = data.get('preferredCourses', [])
-            availability_data = data.get('availability', [])
+            name = data.get(University.NAME)
+            preferred_courses_data = data.get(University.PREFERRED_COURSES, [])
+            availability_data = data.get(University.AVAILABILITY, [])
 
             if not name:
                 return HttpResponseBadRequest('Missing name')
@@ -45,9 +49,9 @@ def add_instructor(request):
             availability = []
             for slot in availability_data:
                 time_slot = {
-                    'day': slot['day'],
-                    'startTime': slot['startTime'],
-                    'endTime': slot['endTime']
+                    University.DAY: slot[University.DAY],
+                    University.START_TIME: slot[University.START_TIME],
+                    University.END_TIME: slot[University.END_TIME]
                 }
                 if not all(time_slot.values()):
                     return HttpResponseBadRequest('Missing fields in availability slot')
@@ -55,17 +59,17 @@ def add_instructor(request):
 
             preferred_courses = []
             for course_data in preferred_courses_data:
-                if 'courseName' not in course_data:
+                if University.COURSE_NAME not in course_data:
                     return HttpResponseBadRequest('Missing courseName in preferredCourses')
 
-                course_name = course_data['courseName']
+                course_name = course_data[University.COURSE_NAME]
                 if not course_name:
                     return HttpResponseBadRequest('Course name cannot be empty')
 
                 print(f"Processing course: {course_name}")
 
                 try:
-                    course_doc = db.collection('courses').get(course_name)
+                    course_doc = db.collection(University.COURSES).get(course_name)
                     print(course_doc)
                     if not course_doc:
                         return HttpResponseBadRequest(f"Course {course_name} does not exist in the database.")
@@ -73,29 +77,29 @@ def add_instructor(request):
                     return HttpResponseBadRequest(f"Error retrieving course {course_name}: {str(e)}")
 
                 try:
-                    time_slots = course_doc.get('preferredTimeSlots', [])
+                    time_slots = course_doc.get(University.PREFERRED_TIME_SLOTS, [])
                     preferred_time_slots = [{
-                        'day': slot['day'],
-                        'startTime': slot['startTime'],
-                        'endTime': slot['endTime']
+                        University.DAY: slot[University.DAY],
+                        University.START_TIME: slot[University.START_TIME],
+                        University.END_TIME: slot[University.END_TIME]
                     } for slot in time_slots]
 
                     course = {
-                        'courseName': course_doc['courseName'],
-                        'preferredTimeSlots': preferred_time_slots
+                        University.COURSE_NAME: course_doc[University.COURSE_NAME],
+                        University.PREFERRED_TIME_SLOTS: preferred_time_slots
                     }
                     preferred_courses.append(course)
                 except Exception as e:
                     return HttpResponseBadRequest(f"Error creating Course object for {course_name}: {str(e)}")
 
             instructor = {
-                '_key': name,
-                'name': name,
-                'preferredCourses': preferred_courses,
-                'availability': availability
+                University.KEY: name,
+                University.NAME: name,
+                University.PREFERRED_COURSES: preferred_courses,
+                University.AVAILABILITY: availability
             }
 
-            if instructors_collection.has(instructor['_key']):
+            if instructors_collection.has(instructor[University.KEY]):
                 return HttpResponseBadRequest('Instructor with this name already exists')
             instructors_collection.insert(instructor)
 
@@ -112,19 +116,19 @@ def add_course(request):
         try:
             data = json.loads(request.body)
 
-            name = data.get('courseName')
-            preferred_time_slots_data = data.get('preferredTimeSlots', [])
+            name = data.get(University.COURSE_NAME)
+            preferred_time_slots_data = data.get(University.PREFERRED_TIME_SLOTS, [])
 
             if not name:
                 return HttpResponseBadRequest('Missing name')
 
             course = {
-                '_key': name,
-                'courseName': name,
-                'preferredTimeSlots': preferred_time_slots_data
+                University.KEY: name,
+                University.COURSE_NAME: name,
+                University.PREFERRED_TIME_SLOTS: preferred_time_slots_data
             }
 
-            if courses_collection.has(course['_key']):
+            if courses_collection.has(course[University.KEY]):
                 return HttpResponseBadRequest('Course with this name already exists')
             courses_collection.insert(course)
 
@@ -140,13 +144,13 @@ def add_time_slot(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-            if 'time_slots' not in data:
+            if University.TIME_SLOTS not in data:
                 return HttpResponseBadRequest('No time_slots in request body')
 
-            for timeSlot in data['time_slots']:
-                day = timeSlot.get('day')
-                start_time = timeSlot.get('startTime')
-                end_time = timeSlot.get('endTime')
+            for timeSlot in data[University.TIME_SLOTS]:
+                day = timeSlot.get(University.DAY)
+                start_time = timeSlot.get(University.START_TIME)
+                end_time = timeSlot.get(University.END_TIME)
 
                 if not day or not start_time or not end_time:
                     return HttpResponseBadRequest('Missing fields in time slot')
@@ -154,13 +158,13 @@ def add_time_slot(request):
                 time_slot_key = f"{day}_{start_time}-{end_time}"
 
                 time_slot = {
-                    '_key': time_slot_key,
-                    'day': day,
-                    'startTime': start_time,
-                    'endTime': end_time
+                    University.KEY: time_slot_key,
+                    University.DAY: day,
+                    University.START_TIME: start_time,
+                    University.END_TIME: end_time
                 }
 
-                if timeslots_collection.has(time_slot['_key']):
+                if timeslots_collection.has(time_slot[University.KEY]):
                     return HttpResponseBadRequest('Time slot with this key already exists')
                 timeslots_collection.insert(time_slot)
 
@@ -175,43 +179,43 @@ def add_time_slot(request):
 def generate_schedule(request):
     if request.method == 'POST':
         try:
-            collections = ['courses', 'instructors', 'timeslots']
+            collections = [University.COURSES, University.INSTRUCTORS, University.TIME_SLOTS]
             for collection in collections:
                 if not db.has_collection(collection):
                     db.create_collection(collection)
 
-            courses = list(db.collection('courses').all())
-            instructors = list(db.collection('instructors').all())
-            time_slots = list(db.collection('timeslots').all())
+            courses = list(db.collection(University.COURSES).all())
+            instructors = list(db.collection(University.INSTRUCTORS).all())
+            time_slots = list(db.collection(University.TIME_SLOTS).all())
 
             py_courses = []
             for course in courses:
-                course_name = course.get('courseName')
-                preferred_time_slots = course.get('preferredTimeSlots', [])
+                course_name = course.get(University.COURSE_NAME)
+                preferred_time_slots = course.get(University.PREFERRED_TIME_SLOTS, [])
 
                 if not course_name:
                     print(f"Skipping course due to missing 'courseName': {course}")
                     continue
 
-                preferredTimeSlots = [ub.TimeSlot(slot['day'], slot['startTime'], slot['endTime']) for slot in preferred_time_slots]
+                preferredTimeSlots = [ub.TimeSlot(slot[University.DAY], slot[University.START_TIME], slot[University.END_TIME]) for slot in preferred_time_slots]
                 py_courses.append(ub.Course(course_name, preferredTimeSlots))
 
             py_instructors = []
             for instructor in instructors:
-                name = instructor.get('name')
-                availability_data = instructor.get('availability', [])
-                preferred_courses_data = instructor.get('preferredCourses', [])
+                name = instructor.get(University.NAME)
+                availability_data = instructor.get(University.AVAILABILITY, [])
+                preferred_courses_data = instructor.get(University.PREFERRED_COURSES, [])
 
                 if not name:
                     print(f"Skipping instructor due to missing 'name': {instructor}")
                     continue
 
-                availability = [ub.TimeSlot(slot['day'], slot['startTime'], slot['endTime']) for slot in availability_data]
+                availability = [ub.TimeSlot(slot[University.DAY], slot[University.START_TIME], slot[University.END_TIME]) for slot in availability_data]
                 print(availability)
 
                 preferred_courses = []
                 for course_data in preferred_courses_data:
-                    course_name = course_data.get('courseName')
+                    course_name = course_data.get(University.COURSE_NAME)
                     if not course_name:
                         print(f"Skipping preferred course due to missing 'courseName': {course_data}")
                         continue
@@ -227,9 +231,9 @@ def generate_schedule(request):
 
             py_time_slots = []
             for timeSlot in time_slots:
-                day = timeSlot.get('day')
-                start_time = timeSlot.get('startTime')
-                end_time = timeSlot.get('endTime')
+                day = timeSlot.get(University.DAY)
+                start_time = timeSlot.get(University.START_TIME)
+                end_time = timeSlot.get(University.END_TIME)
 
                 py_time_slots.append(ub.TimeSlot(day, start_time, end_time))
 
@@ -243,7 +247,7 @@ def generate_schedule(request):
 
             schedule = university.schedule()
             schedule_data = university.scheduleToJsonFormat()
-            return JsonResponse({'schedule': schedule_data})
+            return JsonResponse({University.SCHEDULE: schedule_data})
         except Exception as e:
             traceback.print_exc()
             return HttpResponseServerError(str(e))
@@ -254,14 +258,14 @@ def generate_schedule(request):
 @csrf_exempt
 def show_university(request):
     try:
-        courses = list(db.collection('courses').all())
-        instructors = list(db.collection('instructors').all())
-        time_slots = list(db.collection('timeslots').all())
+        courses = list(db.collection(University.COURSES).all())
+        instructors = list(db.collection(University.INSTRUCTORS).all())
+        time_slots = list(db.collection(University.TIME_SLOTS).all())
 
         return JsonResponse({
-            'courses': courses,
-            'instructors': instructors,
-            'timeSlots': time_slots
+            University.COURSES: courses,
+            University.INSTRUCTORS: instructors,
+            University.TIME_SLOTS: time_slots
         })
 
     except Exception as e:

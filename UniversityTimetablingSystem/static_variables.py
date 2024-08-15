@@ -1,0 +1,16 @@
+
+class University:
+    UNIVERSITY = 'University'
+    KEY = '_key'
+    COURSES = 'courses'
+    TIME_SLOTS = 'timeSlots'
+    INSTRUCTORS = 'instructors'
+    NAME = 'name'
+    PREFERRED_COURSES = 'preferredCourses'
+    AVAILABILITY = 'availability'
+    DAY = 'day'
+    START_TIME = 'startTime'
+    END_TIME = 'endTime'
+    COURSE_NAME = 'courseName'
+    PREFERRED_TIME_SLOTS = 'preferredTimeSlots'
+    SCHEDULE = 'schedule'

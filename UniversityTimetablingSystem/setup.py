@@ -1,29 +1,30 @@
 from arango import ArangoClient
+from static_variables import University
 
 
 def main():
     client = ArangoClient(hosts="http://localhost:8529")
     sys_db = client.db('_system', username='root', password='openSesame')
 
-    if not sys_db.has_database('university_db'):
-        sys_db.create_database('university_db')
+    if not sys_db.has_database(University.UNIVERSITY):
+        sys_db.create_database(University.UNIVERSITY)
 
-    db = client.db('university_db', username='root', password='openSesame')
+    db = client.db(University.UNIVERSITY, username='root', password='openSesame')
 
-    if not db.has_collection('instructors'):
-        instructors_collection = db.create_collection('instructors')
+    if not db.has_collection(University.INSTRUCTORS):
+        instructors_collection = db.create_collection(University.INSTRUCTORS)
     else:
-        instructors_collection = db.collection('instructors')
+        instructors_collection = db.collection(University.INSTRUCTORS)
 
-    if not db.has_collection('courses'):
-        courses_collection = db.create_collection('courses')
+    if not db.has_collection(University.COURSES):
+        courses_collection = db.create_collection(University.COURSES)
     else:
-        courses_collection = db.collection('courses')
+        courses_collection = db.collection(University.COURSES)
 
-    if not db.has_collection('timeslots'):
-        timeslots_collection = db.create_collection('timeslots')
+    if not db.has_collection(University.TIME_SLOTS):
+        timeslots_collection = db.create_collection(University.TIME_SLOTS)
     else:
-        timeslots_collection = db.collection('timeslots')
+        timeslots_collection = db.collection(University.TIME_SLOTS)
 
 
 if __name__ == '__main__':
