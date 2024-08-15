@@ -34,7 +34,7 @@ else:
     timeslots_collection = db.collection('timeslots')
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
-project_root = os.path.abspath(os.path.join(current_dir, '../../../build'))
+project_root = os.path.abspath(os.path.join(current_dir, os.pardir, os.pardir, os.pardir, "build"))
 sys.path.append(project_root)
 
 try:
@@ -241,7 +241,6 @@ def generate_schedule(request):
                 py_instructors.append(ub.Instructor(name, availability, preferred_courses))
 
             py_time_slots = []
-            print("before time slots")
             for t in time_slots:
                 day = t.get('day')
                 start_time = t.get('startTime')
