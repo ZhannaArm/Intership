@@ -5,8 +5,8 @@
     <div v-if="schedule">
       <h2>Schedule</h2>
       <ul>
-        <li v-for="entry in schedule" :key="entry.course">
-          Course: {{ entry.course }}, Time Slot: {{ entry.timeSlot }}, Instructor: {{ entry.instructor }}
+        <li v-for="(entry, index) in schedule" :key="index">
+          Course: {{ entry[0] }}, Time Slot: {{ entry[1] }}, Instructor: {{ entry[2] }}
         </li>
       </ul>
     </div>
