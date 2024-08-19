@@ -12,6 +12,24 @@ std::vector<Instructor> University::getInstructors() const { return this->instru
 
 std::vector<Course> University::getCourses() const { return this->courses; }
 
+bool University::courseExists(const std::string& courseName) const {
+    for (const auto& course : courses) {
+        if (course.getCourseName() == courseName) {
+            return true;
+        }
+    }
+    return false;
+}
+
+Course University::getCourse(const std::string& courseName) const {
+    for (const auto& course : courses) {
+        if (course.getCourseName() == courseName) {
+            return course;
+        }
+    }
+    throw std::runtime_error("Course not found");
+}
+
 json University::convertCoursesToJson() const {
     json j = json::array();
     for (const auto& course : courses) {
@@ -90,8 +108,7 @@ void University::loadInstructorsFromJson(const json& j) {
 void University::loadTimeSlotsFromJson(const json& j) {
     timeSlots.clear();
     for (const auto& timeSlotJson : j[TIME_SLOTS]) {
-        timeSlots.emplace_back(timeSlotJson[DAY], timeSlotJson[START_TIME],
-                               timeSlotJson[END_TIME]);
+        timeSlots.emplace_back(timeSlotJson[DAY], timeSlotJson[START_TIME], timeSlotJson[END_TIME]);
     }
 }
 
@@ -271,6 +288,20 @@ std::vector<std::pair<Course, std::pair<TimeSlot, Instructor>>> University::sche
 
     Schedule = bestSchedule;
     return bestSchedule;  // I do this for google tests
+}
+
+json University::scheduleToJsonFormat() const {
+    json result = json::array();
+    for (const auto& entry : Schedule) {
+        nlohmann::json scheduleEntry;
+        scheduleEntry[COURSE] = entry.first.getCourseName();
+        scheduleEntry[TIME_SLOT] = entry.second.first.getDay() + " " +
+                                    entry.second.first.getStartTime() + "-" +
+                                    entry.second.first.getEndTime();
+        scheduleEntry[INSTRUCTOR] = entry.second.second.getName();
+        result.push_back(scheduleEntry);
+    }
+    return result;
 }
 
 void University::displaySchedule() const {

@@ -12,8 +12,8 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2 -Wno-inline -DNDEBUG
 set(CMAKE_CXX_FLAGS_SANITIZE "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address,undefined")
 
 #Add subdirectory for argparse and nlohmann libraries
-add_subdirectory(argparse)
-add_subdirectory(nlohmann)
+add_subdirectory(submodules/argparse)
+add_subdirectory(submodules/nlohmann)
 
 #Add source files for the UniversityTimetablingLib library
 add_library(UniversityTimetablingLib SHARED
@@ -27,21 +27,34 @@ add_library(UniversityTimetablingLib SHARED
 target_include_directories(UniversityTimetablingLib PUBLIC
         ${CMAKE_SOURCE_DIR}/src
         ${CMAKE_SOURCE_DIR}/include
-        ${CMAKE_SOURCE_DIR}/nlohmann/include
-        ${CMAKE_SOURCE_DIR}/argparse
+        ${CMAKE_SOURCE_DIR}/submodules/nlohmann/include
+        ${CMAKE_SOURCE_DIR}/submodules/argparse
         )
 
 #Add executable for the main application
 add_executable(UniversityTimetablingSystem src/main.cpp) #Creates an executable from main.cpp
 target_link_libraries(UniversityTimetablingSystem PRIVATE UniversityTimetablingLib) #Links an executable file to a dynamic library
 
+set(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR})
 #Add Google test
-add_subdirectory(googletest)
-include_directories(googletest/googletest/include)
+add_subdirectory(submodules/googletest)
+include_directories(submodules/googletest/googletest/include)
 
 #Add executable for running tests
 add_executable(runTests tests/test_University.cpp)
 target_link_libraries(runTests PRIVATE UniversityTimetablingLib gtest gtest_main)
+
+#Install UniversityTimetablingLib to lib directory
+install(TARGETS UniversityTimetablingLib
+        LIBRARY DESTINATION ${CMAKE_SOURCE_DIR}/lib)
+
+#Install UniversityTimetablingSystem executable to bin directory
+install(TARGETS UniversityTimetablingSystem
+        RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/bin)
+
+#Install runTests executable to bin directory
+install(TARGETS runTests
+        RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/bin)
 
 #Enable testing
 #enable_testing()

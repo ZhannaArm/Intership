@@ -4,8 +4,8 @@
 #include <string>
 #include <vector>
 
-#include "TimeSlot.h"
 #include "Constants.h"
+#include "TimeSlot.h"
 /*
  * @class Course
  * @A class to represent a course with a name and preferred time slots.
@@ -54,7 +54,9 @@ class Course {
    public:
     Course() = default;
 
-    Course(std::string course_name, std::vector<TimeSlot> preferred_time_slots);
+    Course(const std::string& course_name, const std::vector<TimeSlot>& preferred_time_slots);
+
+    Course(const Course& other);
 
     void displayInfo() const;
 
@@ -65,6 +67,8 @@ class Course {
     std::string getCourseName() const;
 
     json toJson() const;
+
+    Course& operator=(const Course& other);
 
     bool operator==(const Course& other) const;
 

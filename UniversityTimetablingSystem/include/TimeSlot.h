@@ -3,8 +3,8 @@
 #include <iostream>
 #include <string>
 
-#include "nlohmann/json.hpp"
 #include "Constants.h"
+#include "nlohmann/json.hpp"
 /*
  * @class TimeSlot
  * @brief A class to represent a time slot with a day, start time, and end time.
@@ -51,7 +51,11 @@ class TimeSlot {
    public:
     TimeSlot() = default;
 
-    TimeSlot(std::string day_, std::string start_time, std::string end_time);
+    TimeSlot(const std::string& day_, const std::string& start_time, const std::string& end_time);
+
+    TimeSlot(const TimeSlot& other);
+
+    TimeSlot& operator=(const TimeSlot& other);
 
     void displayInfo() const;
 

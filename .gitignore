@@ -1,0 +1,16 @@
+# Python virtual environment
+env/
+
+# CMake build directory
+build/
+
+# IDE-specific files
+.idea/
+*.iml
+
+# Logs and temporary files
+*.log
+*.tmp
+
+# MacOS-specific files
+.DS_Store
