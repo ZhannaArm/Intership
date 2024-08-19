@@ -61,8 +61,9 @@ git submodule update --init --recursive
 ###Running the Project
 The project provides several commands to manage instructors, courses, and time slots, as well as to generate the schedule.
 
-####**If you want to work with the program through the terminal, you can follow these steps:**
-####Commands
+
+#### **If you want to work with the program through the terminal, you can follow these steps:**
+#### Commands
 - **Add Time SLot**: Adds a time slot(day, start time, end time).
   ```sh
   ./UniversityTimetablingSystem --addTimeSlot --day DAY --startTime START --endTime END
@@ -96,7 +97,6 @@ Write this in the second terminal:
   cd your-repository
   ./run-frontend.sh
   ```
-
 Write this in the third terminal:
   ```sh
   cd your-repository

@@ -23,7 +23,7 @@ courses_collection = db.collection(University.COURSES)
 timeslots_collection = db.collection(University.TIME_SLOTS)
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
-project_root = os.path.abspath(os.path.join(current_dir, os.pardir, os.pardir, os.pardir, "build"))
+project_root = os.path.abspath(os.path.join(current_dir, os.pardir, os.pardir, os.pardir, "bin"))
 sys.path.append(project_root)
 
 try:
@@ -32,7 +32,6 @@ except ImportError as e:
     raise ImportError(f"Failed to import university_bindings: {e}")
 
 university = ub.University()
-
 
 @csrf_exempt
 def add_instructor(request):
@@ -131,6 +130,16 @@ def create_and_add_instructor(name, preferred_courses, availability):
     instructors_collection.insert(instructor)
     return None
 
+        result = subprocess.run(args, capture_output=True, text=True, check=True)
+        print('Output:', result.stdout)
+
+        return JsonResponse({'status': 'Instructor added successfully'})
+    except subprocess.CalledProcessError as e:
+        print(f"Error occurred: {e}")
+        return HttpResponseBadRequest(f"Error occurred: {e}")
+    except Exception as e:
+        print(f"Error occurred: {e}")
+        return HttpResponseBadRequest(f"Error occurred: {e}")
 
 @csrf_exempt
 def add_course(request):
@@ -340,4 +349,3 @@ def show_university(request):
     except Exception as e:
         print("Exception occurred:", e)
         traceback.print_exc()
-        return HttpResponseServerError(str(e))    

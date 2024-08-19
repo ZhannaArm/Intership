@@ -7,7 +7,7 @@ Course::Course(const std::string& course_name, const std::vector<TimeSlot>& pref
         : courseName(course_name), preferredTimeSlots(preferred_time_slots) {}
 
 Course::Course(const Course& other)
-        : courseName(other.courseName), preferredTimeSlots(other.preferredTimeSlots) {}
+    : courseName(other.courseName), preferredTimeSlots(other.preferredTimeSlots) {}
 
 void Course::displayInfo() const {
     std::cout << "Course Name: " << courseName << std::endl;

@@ -20,6 +20,7 @@ fi
 
 mkdir -p build
 cd build
+
 case "$build_type" in
     debug)
         echo "Building in debug mode..."
