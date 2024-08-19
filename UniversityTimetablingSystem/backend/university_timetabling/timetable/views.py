@@ -23,7 +23,7 @@ courses_collection = db.collection(University.COURSES)
 timeslots_collection = db.collection(University.TIME_SLOTS)
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
-project_root = os.path.abspath(os.path.join(current_dir, os.pardir, os.pardir, os.pardir, "bin"))
+project_root = os.path.abspath(os.path.join(current_dir, os.pardir, os.pardir, os.pardir, 'build'))
 sys.path.append(project_root)
 
 try:
