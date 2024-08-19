@@ -36,33 +36,33 @@ university = ub.University()
 
 @csrf_exempt
 def add_instructor(request):
-    if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-            name = data.get(University.NAME)
-            preferred_courses_data = data.get(University.PREFERRED_COURSES, [])
-            availability_data = data.get(University.AVAILABILITY, [])
+    if request.method != 'POST':
+        return HttpResponseBadRequest('Invalid request method')
+    try:
+        data = json.loads(request.body)
+        name = data.get(University.NAME)
+        preferred_courses_data = data.get(University.PREFERRED_COURSES, [])
+        availability_data = data.get(University.AVAILABILITY, [])
 
-            if not name:
-                return HttpResponseBadRequest('Missing name')
+        if not name:
+            return HttpResponseBadRequest('Missing name')
 
-            availability = process_availability(availability_data)
-            if isinstance(availability, HttpResponseBadRequest):
-                return availability
+        availability = process_availability(availability_data)
+        if isinstance(availability, HttpResponseBadRequest):
+            return availability
 
-            preferred_courses = process_preferred_courses(preferred_courses_data)
-            if isinstance(preferred_courses, HttpResponseBadRequest):
-                return preferred_courses
+        preferred_courses = process_preferred_courses(preferred_courses_data)
+        if isinstance(preferred_courses, HttpResponseBadRequest):
+            return preferred_courses
 
-            response = create_and_add_instructor(name, preferred_courses, availability)
-            if response is not None:
-                return response
+        response = create_and_add_instructor(name, preferred_courses, availability)
+        if response is not None:
+            return response
 
-            return JsonResponse({'status': 'Instructor added successfully'})
-        except Exception as e:
-            print(f"Error occurred: {e}")
-            return HttpResponseServerError(str(e))
-    return HttpResponseBadRequest('Invalid request method')
+        return JsonResponse({'status': 'Instructor added successfully'})
+    except Exception as e:
+        print(f"Error occurred: {e}")
+        return HttpResponseServerError(str(e))
 
 
 def process_availability(availability_data):
@@ -134,25 +134,25 @@ def create_and_add_instructor(name, preferred_courses, availability):
 
 @csrf_exempt
 def add_course(request):
-    if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
+    if request.method != 'POST':
+        return HttpResponseBadRequest('Invalid request method')
+    try:
+        data = json.loads(request.body)
 
-            name = data.get(University.COURSE_NAME)
-            preferred_time_slots_data = data.get(University.PREFERRED_TIME_SLOTS, [])
+        name = data.get(University.COURSE_NAME)
+        preferred_time_slots_data = data.get(University.PREFERRED_TIME_SLOTS, [])
 
-            if not name:
-                return HttpResponseBadRequest('Missing name')
+        if not name:
+            return HttpResponseBadRequest('Missing name')
 
-            response = create_and_add_course(name, preferred_time_slots_data)
-            if response is not None:
-                return response
+        response = create_and_add_course(name, preferred_time_slots_data)
+        if response is not None:
+            return response
 
-            return JsonResponse({'status': 'Course added successfully'})
-        except Exception as e:
-            print(f"Error occurred: {e}")
-            return HttpResponseServerError(str(e))
-    return HttpResponseBadRequest('Invalid request method')
+        return JsonResponse({'status': 'Course added successfully'})
+    except Exception as e:
+        print(f"Error occurred: {e}")
+        return HttpResponseServerError(str(e))
 
 
 def create_and_add_course(name, preferred_time_slots_data):
@@ -170,31 +170,31 @@ def create_and_add_course(name, preferred_time_slots_data):
 
 @csrf_exempt
 def add_time_slot(request):
-    if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-            if University.TIME_SLOTS not in data:
-                return HttpResponseBadRequest('No time_slots in request body')
+    if request.method != 'POST':
+        return HttpResponseBadRequest('Invalid request method')
+    try:
+        data = json.loads(request.body)
+        if University.TIME_SLOTS not in data:
+            return HttpResponseBadRequest('No time_slots in request body')
 
-            for timeSlot in data[University.TIME_SLOTS]:
-                day = timeSlot.get(University.DAY)
-                start_time = timeSlot.get(University.START_TIME)
-                end_time = timeSlot.get(University.END_TIME)
+        for timeSlot in data[University.TIME_SLOTS]:
+            day = timeSlot.get(University.DAY)
+            start_time = timeSlot.get(University.START_TIME)
+            end_time = timeSlot.get(University.END_TIME)
 
-                if not day or not start_time or not end_time:
-                    return HttpResponseBadRequest('Missing fields in time slot')
+            if not day or not start_time or not end_time:
+                return HttpResponseBadRequest('Missing fields in time slot')
 
-                time_slot_key = f"{day}_{start_time}-{end_time}"
+            time_slot_key = f"{day}_{start_time}-{end_time}"
 
-                response = create_and_add_time_slot(time_slot_key, day, start_time, end_time)
-                if response is not None:
-                    return response
+            response = create_and_add_time_slot(time_slot_key, day, start_time, end_time)
+            if response is not None:
+                return response
 
-            return JsonResponse({'status': 'Time Slot(s) added successfully'})
-        except Exception as e:
-            print(f"Error occurred: {e}")
-            return HttpResponseServerError(str(e))
-    return HttpResponseBadRequest('Invalid request method')
+        return JsonResponse({'status': 'Time Slot(s) added successfully'})
+    except Exception as e:
+        print(f"Error occurred: {e}")
+        return HttpResponseServerError(str(e))
 
 
 def create_and_add_time_slot(time_slot_key, day, start_time, end_time):
@@ -213,23 +213,22 @@ def create_and_add_time_slot(time_slot_key, day, start_time, end_time):
 
 @csrf_exempt
 def generate_schedule(request):
-    if request.method == 'POST':
-        try:
-            ensure_collections_exist()
-
-            py_courses = load_courses()
-            py_instructors = load_instructors(py_courses)
-            py_time_slots = load_time_slots()
-
-            university = build_university(py_courses, py_instructors, py_time_slots)
-
-            schedule_data = generate_university_schedule(university)
-            return JsonResponse({University.SCHEDULE: schedule_data})
-        except Exception as e:
-            traceback.print_exc()
-            return HttpResponseServerError(str(e))
-    else:
+    if request.method != 'POST':
         return HttpResponseBadRequest('Invalid request method')
+    try:
+        ensure_collections_exist()
+
+        py_courses = load_courses()
+        py_instructors = load_instructors(py_courses)
+        py_time_slots = load_time_slots()
+
+        university = build_university(py_courses, py_instructors, py_time_slots)
+
+        schedule_data = generate_university_schedule(university)
+        return JsonResponse({University.SCHEDULE: schedule_data})
+    except Exception as e:
+        traceback.print_exc()
+        return HttpResponseServerError(str(e))
 
 
 def ensure_collections_exist():
