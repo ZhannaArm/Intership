@@ -291,17 +291,30 @@ std::vector<std::pair<Course, std::pair<TimeSlot, Instructor>>> University::sche
 }
 
 
-std::vector<std::tuple<std::string, std::string, std::string>> University::scheduleToJsonFormat()
-const {
-    std::vector<std::tuple<std::string, std::string, std::string>> result;
+json University::scheduleToJsonFormat() const {
+    json result = json::array();
     for (const auto& entry : Schedule) {
         nlohmann::json scheduleEntry;
         scheduleEntry[COURSE] = entry.first.getCourseName();
         scheduleEntry[TIME_SLOT] = entry.second.first.getDay() + " " +
-                                    entry.second.first.getStartTime() + "-" +
-                                    entry.second.first.getEndTime();
+                                   entry.second.first.getStartTime() + "-" +
+                                   entry.second.first.getEndTime();
         scheduleEntry[INSTRUCTOR] = entry.second.second.getName();
         result.push_back(scheduleEntry);
+    }
+    return result;
+}
+
+std::vector<std::tuple<std::string, std::string, std::string>> University::scheduleToJsonFormatDB()
+const {
+    std::vector<std::tuple<std::string, std::string, std::string>> result;
+    for (const auto& entry : Schedule) {
+        std::string courseName = entry.first.getCourseName();
+        std::string timeSlot = entry.second.first.getDay() + " " +
+                               entry.second.first.getStartTime() + "-" +
+                               entry.second.first.getEndTime();
+        std::string instructorName = entry.second.second.getName();
+        result.emplace_back(courseName, timeSlot, instructorName);
     }
     return result;
 }

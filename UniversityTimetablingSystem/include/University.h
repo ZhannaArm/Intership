@@ -125,6 +125,8 @@ public:
 
     json scheduleToJsonFormat() const;
 
+    std::vector<std::tuple<std::string, std::string, std::string>> scheduleToJsonFormatDB() const;
+
     void schedule_bruteForce();  // the second solution
 
     void displaySchedule() const;

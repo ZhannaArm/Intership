@@ -33,6 +33,7 @@ except ImportError as e:
 
 university = ub.University()
 
+
 @csrf_exempt
 def add_instructor(request):
     if request.method != 'POST':
@@ -130,16 +131,6 @@ def create_and_add_instructor(name, preferred_courses, availability):
     instructors_collection.insert(instructor)
     return None
 
-        result = subprocess.run(args, capture_output=True, text=True, check=True)
-        print('Output:', result.stdout)
-
-        return JsonResponse({'status': 'Instructor added successfully'})
-    except subprocess.CalledProcessError as e:
-        print(f"Error occurred: {e}")
-        return HttpResponseBadRequest(f"Error occurred: {e}")
-    except Exception as e:
-        print(f"Error occurred: {e}")
-        return HttpResponseBadRequest(f"Error occurred: {e}")
 
 @csrf_exempt
 def add_course(request):
@@ -330,7 +321,7 @@ def build_university(py_courses, py_instructors, py_time_slots):
 
 def generate_university_schedule(university):
     schedule = university.schedule()
-    return university.scheduleToJsonFormat()
+    return university.scheduleToJsonFormatDB()
 
 
 @csrf_exempt
@@ -349,3 +340,4 @@ def show_university(request):
     except Exception as e:
         print("Exception occurred:", e)
         traceback.print_exc()
+        return HttpResponseServerError(str(e))
