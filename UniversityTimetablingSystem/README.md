@@ -58,7 +58,7 @@ git submodule update --init --recursive
 ./build.sh release # Build the project in Release mode
 ./build.sh debug   # Build the project in Debug mode
 ```
-###Running the Project
+### Running the Project
 The project provides several commands to manage instructors, courses, and time slots, as well as to generate the schedule.
 
 
@@ -83,7 +83,7 @@ The project provides several commands to manage instructors, courses, and time s
   ./UniversityTimetablingSystem --schedule
   ```
 
-####**If you want to work with the program over the network, open three terminals and write this in one of them:**
+#### **If you want to work with the program over the network, open three terminals and write this in one of them:**
   ```sh
   cd your-repository
   chmod +x run-server.sh #This only needs to be done once
@@ -102,10 +102,10 @@ Write this in the third terminal:
   cd your-repository
   ./run-database.sh
   ```
-###IMPORTANT
+### IMPORTANT
 You must add courses **BEFORE** you add instructors.
 
-####EXAMPLE with running the project through the terminal
+#### EXAMPLE with running the project through the terminal
 ```sh
 ./bin/UniversityTimetablingSystem --addTimeSlot Monday 11:00 14:00
 ./bin/UniversityTimetablingSystem --addTimeSlot Wednesday 14:00 16:00

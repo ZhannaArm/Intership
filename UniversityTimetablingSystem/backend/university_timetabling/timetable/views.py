@@ -1,18 +1,17 @@
-# backend/university_timetabling/timetable/views.py
-
-from django.shortcuts import render
 import os
 import sys
-from django.http import JsonResponse, HttpResponseBadRequest, HttpResponseServerError
-from django.views.decorators.csrf import csrf_exempt
-from arango import ArangoClient
 import json
 import traceback
+from arango import ArangoClient
+from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse, HttpResponseBadRequest, HttpResponseServerError
+
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 project_root = os.path.abspath(os.path.join(current_dir, os.pardir, os.pardir, os.pardir))
 sys.path.append(project_root)
-from static_variables import University
+from constants import University
 
 client = ArangoClient(hosts="http://localhost:8529")
 sys_db = client.db('_system', username='root', password='openSesame')
@@ -48,16 +47,17 @@ def add_instructor(request):
             return HttpResponseBadRequest('Missing name')
 
         availability = process_availability(availability_data)
-        if isinstance(availability, HttpResponseBadRequest):
-            return availability
+        if availability is False:
+            return HttpResponseBadRequest('Invalid availability data')
 
         preferred_courses = process_preferred_courses(preferred_courses_data)
-        if isinstance(preferred_courses, HttpResponseBadRequest):
-            return preferred_courses
+        if preferred_courses is False:
+            return HttpResponseBadRequest('Invalid preferred courses data')
 
-        response = create_and_add_instructor(name, preferred_courses, availability)
-        if response is not None:
-            return response
+        if instructor_exists(name):
+            return HttpResponseBadRequest('Instructor with this name already exists')
+
+        create_and_add_instructor(name, preferred_courses, availability)
 
         return JsonResponse({'status': 'Instructor added successfully'})
     except Exception as e:
@@ -74,7 +74,7 @@ def process_availability(availability_data):
             University.END_TIME: slot[University.END_TIME]
         }
         if not all(time_slot.values()):
-            return HttpResponseBadRequest('Missing fields in availability slot')
+            return False
         availability.append(time_slot)
     return availability
 
@@ -82,40 +82,38 @@ def process_availability(availability_data):
 def process_preferred_courses(preferred_courses_data):
     preferred_courses = []
     for course_data in preferred_courses_data:
-        if University.COURSE_NAME not in course_data:
-            return HttpResponseBadRequest('Missing courseName in preferredCourses')
-
-        course_name = course_data[University.COURSE_NAME]
+        course_name = course_data.get(University.COURSE_NAME)
+        
         if not course_name:
-            return HttpResponseBadRequest('Course name cannot be empty')
+            print("Error: Missing or empty course name in preferredCourses")
+            return None
 
         print(f"Processing course: {course_name}")
 
-        try:
-            course_doc = db.collection(University.COURSES).get(course_name)
-            print(course_doc)
-            if not course_doc:
-                return HttpResponseBadRequest(f"Course {course_name} does not exist in the database.")
-        except Exception as e:
-            return HttpResponseBadRequest(f"Error retrieving course {course_name}: {str(e)}")
+        course_doc = db.collection(University.COURSES).get(course_name)
+        if not course_doc:
+            print(f"Error: Course {course_name} does not exist in the database.")
+            return None
 
-        try:
-            time_slots = course_doc.get(University.PREFERRED_TIME_SLOTS, [])
-            preferred_time_slots = [{
-                University.DAY: slot[University.DAY],
-                University.START_TIME: slot[University.START_TIME],
-                University.END_TIME: slot[University.END_TIME]
-            } for slot in time_slots]
+        time_slots = course_doc.get(University.PREFERRED_TIME_SLOTS, [])
 
-            course = {
-                University.COURSE_NAME: course_doc[University.COURSE_NAME],
-                University.PREFERRED_TIME_SLOTS: preferred_time_slots
-            }
-            preferred_courses.append(course)
-        except Exception as e:
-            return HttpResponseBadRequest(f"Error creating Course object for {course_name}: {str(e)}")
+        preferred_time_slots = [{
+            University.DAY: slot[University.DAY],
+            University.START_TIME: slot[University.START_TIME],
+            University.END_TIME: slot[University.END_TIME]
+        } for slot in time_slots]
+
+        course = {
+            University.COURSE_NAME: course_doc[University.COURSE_NAME],
+            University.PREFERRED_TIME_SLOTS: preferred_time_slots
+        }
+        preferred_courses.append(course)
 
     return preferred_courses
+
+
+def instructor_exists(name):
+    return instructors_collection.has(name)
 
 
 def create_and_add_instructor(name, preferred_courses, availability):
@@ -125,11 +123,7 @@ def create_and_add_instructor(name, preferred_courses, availability):
         University.PREFERRED_COURSES: preferred_courses,
         University.AVAILABILITY: availability
     }
-
-    if instructors_collection.has(instructor[University.KEY]):
-        return HttpResponseBadRequest('Instructor with this name already exists')
     instructors_collection.insert(instructor)
-    return None
 
 
 @csrf_exempt
@@ -145,14 +139,19 @@ def add_course(request):
         if not name:
             return HttpResponseBadRequest('Missing name')
 
-        response = create_and_add_course(name, preferred_time_slots_data)
-        if response is not None:
-            return response
+        if course_exists(name):
+            return HttpResponseBadRequest('Course with this name already exists')
+
+        create_and_add_course(name, preferred_time_slots_data)
 
         return JsonResponse({'status': 'Course added successfully'})
     except Exception as e:
         print(f"Error occurred: {e}")
         return HttpResponseServerError(str(e))
+
+
+def course_exists(name):
+    return courses_collection.has(name)
 
 
 def create_and_add_course(name, preferred_time_slots_data):
@@ -161,11 +160,7 @@ def create_and_add_course(name, preferred_time_slots_data):
         University.COURSE_NAME: name,
         University.PREFERRED_TIME_SLOTS: preferred_time_slots_data
     }
-
-    if courses_collection.has(course[University.KEY]):
-        return HttpResponseBadRequest('Course with this name already exists')
     courses_collection.insert(course)
-    return None
 
 
 @csrf_exempt
@@ -187,14 +182,19 @@ def add_time_slot(request):
 
             time_slot_key = f"{day}_{start_time}-{end_time}"
 
-            response = create_and_add_time_slot(time_slot_key, day, start_time, end_time)
-            if response is not None:
-                return response
+            if time_slot_exists(time_slot_key):
+                return HttpResponseBadRequest('Time slot with this key already exists')
+
+            create_and_add_time_slot(time_slot_key, day, start_time, end_time)
 
         return JsonResponse({'status': 'Time Slot(s) added successfully'})
     except Exception as e:
         print(f"Error occurred: {e}")
         return HttpResponseServerError(str(e))
+
+
+def time_slot_exists(time_slot_key):
+    return timeslots_collection.has(time_slot_key)
 
 
 def create_and_add_time_slot(time_slot_key, day, start_time, end_time):
@@ -204,11 +204,7 @@ def create_and_add_time_slot(time_slot_key, day, start_time, end_time):
         University.START_TIME: start_time,
         University.END_TIME: end_time
     }
-
-    if timeslots_collection.has(time_slot[University.KEY]):
-        return HttpResponseBadRequest('Time slot with this key already exists')
     timeslots_collection.insert(time_slot)
-    return None
 
 
 @csrf_exempt
@@ -216,8 +212,6 @@ def generate_schedule(request):
     if request.method != 'POST':
         return HttpResponseBadRequest('Invalid request method')
     try:
-        ensure_collections_exist()
-
         py_courses = load_courses()
         py_instructors = load_instructors(py_courses)
         py_time_slots = load_time_slots()
@@ -229,13 +223,6 @@ def generate_schedule(request):
     except Exception as e:
         traceback.print_exc()
         return HttpResponseServerError(str(e))
-
-
-def ensure_collections_exist():
-    collections = [University.COURSES, University.INSTRUCTORS, University.TIME_SLOTS]
-    for collection in collections:
-        if not db.has_collection(collection):
-            db.create_collection(collection)
 
 
 def load_courses():

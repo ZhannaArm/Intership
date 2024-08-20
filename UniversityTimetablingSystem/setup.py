@@ -1,5 +1,5 @@
 from arango import ArangoClient
-from static_variables import University
+from constants import University
 
 
 def main():
@@ -11,20 +11,11 @@ def main():
 
     db = client.db(University.UNIVERSITY, username='root', password='openSesame')
 
-    if not db.has_collection(University.INSTRUCTORS):
-        instructors_collection = db.create_collection(University.INSTRUCTORS)
-    else:
-        instructors_collection = db.collection(University.INSTRUCTORS)
+    instructors_collection = db.create_collection(University.INSTRUCTORS)
 
-    if not db.has_collection(University.COURSES):
-        courses_collection = db.create_collection(University.COURSES)
-    else:
-        courses_collection = db.collection(University.COURSES)
+    courses_collection = db.create_collection(University.COURSES)
 
-    if not db.has_collection(University.TIME_SLOTS):
-        timeslots_collection = db.create_collection(University.TIME_SLOTS)
-    else:
-        timeslots_collection = db.collection(University.TIME_SLOTS)
+    timeslots_collection = db.create_collection(University.TIME_SLOTS)
 
 
 if __name__ == '__main__':

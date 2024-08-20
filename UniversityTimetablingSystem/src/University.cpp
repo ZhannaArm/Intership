@@ -150,22 +150,17 @@ void University::displayInfo() const {
 // brute force algorithm for a large number of time slots, courses and instructors
 void University::schedule_bruteForce() {
     for (const auto& course : courses) {
-        bool scheduled = false;  // flag planned successfully planned course
+        bool scheduled = false;
         for (const auto& preferredTimeSlot :
-                course.getPreferredTimeSlots()) {  // for each course we cover all preferred course
-            // time slots
+                course.getPreferredTimeSlots()) {
             for (const auto& instructor : instructors) {
-                // we check if any of the teachers are available at this time and if the course is
-                // on the teacher's list of preferred courses
                 if (std::find(instructor.getAvailability().begin(),
                               instructor.getAvailability().end(),
                               preferredTimeSlot) != instructor.getAvailability().end() &&
                     std::find(instructor.getPreferredCourses().begin(),
                               instructor.getPreferredCourses().end(),
                               course) != instructor.getPreferredCourses().end()) {
-                    if (scheduleMap.find(course) ==
-                        scheduleMap
-                                .end()) {  // if the course has not yet been added to the schedule
+                    if (scheduleMap.find(course) == scheduleMap.end()) {
                         scheduleMap[course] = std::make_pair(instructor, preferredTimeSlot);
                         scheduled = true;
                         break;
@@ -177,7 +172,6 @@ void University::schedule_bruteForce() {
             }
         }
 
-        // assign a course to any available time slots if preferences are not met
         if (!scheduled) {
             for (const auto& timeSlot : timeSlots) {
                 for (const auto& instructor : instructors) {
@@ -209,22 +203,21 @@ double University::calculateScheduleCost(
         const TimeSlot& timeSlot = entry.second.first;
         const Instructor& instructor = entry.second.second;
 
-        // hard constraints
         auto availability = instructor.getAvailability();
         if (std::find(availability.begin(), availability.end(), timeSlot) == availability.end()) {
-            cost += 1000.0;  // high penalty if instructor is not available
+            cost += 1000.0;
         }
+
         auto preferredTimeSlots = course.getPreferredTimeSlots();
-        // soft constraints
         if (std::find(preferredTimeSlots.begin(), preferredTimeSlots.end(), timeSlot) ==
             preferredTimeSlots.end()) {
-            cost += 10.0;  // lower penalty if course is not in preferred time slot
+            cost += 10.0;
         }
 
         auto preferredCourses = instructor.getPreferredCourses();
         if (std::find(preferredCourses.begin(), preferredCourses.end(), course) ==
             preferredCourses.end()) {
-            cost += 10.0;  // lower penalty if instructor is not teaching preferred course
+            cost += 10.0;
         }
     }
     return cost;
@@ -232,10 +225,8 @@ double University::calculateScheduleCost(
 
 // Simulated Annealing algorithm to schedule courses
 std::vector<std::pair<Course, std::pair<TimeSlot, Instructor>>> University::schedule() {
-    // we initialize random seed
     std::srand(std::time(nullptr));
 
-    // initial schedule (random assignment)
     std::vector<std::pair<Course, std::pair<TimeSlot, Instructor>>> currentSchedule;
     for (const auto& course : courses) {
         TimeSlot timeSlot = timeSlots[std::rand() % timeSlots.size()];
@@ -243,18 +234,14 @@ std::vector<std::pair<Course, std::pair<TimeSlot, Instructor>>> University::sche
         currentSchedule.emplace_back(course, std::make_pair(timeSlot, instructor));
     }
 
-    // parameters for simulated annealing
-    double temperature = 1200.0;  // temperature allows for many combinations
-    double coolingRate =
-            0.005;  // moderately low to give the algorithm enough time to find the optimal solution
-    double minTemperature = 1.0;  // so that the algorithm terminates when the probability of making
-    // worse decisions becomes very low
+    double temperature = 1200.0;
+    double coolingRate = 0.005;
+    double minTemperature = 1.0;
 
     auto bestSchedule = currentSchedule;
     double bestCost = calculateScheduleCost(bestSchedule);
 
     while (temperature > minTemperature) {
-        // we create a new "candidate" schedule by making a small change to the current schedule
         auto newSchedule = currentSchedule;
 
         int randomIndex = std::rand() % newSchedule.size();
@@ -263,26 +250,19 @@ std::vector<std::pair<Course, std::pair<TimeSlot, Instructor>>> University::sche
         newSchedule[randomIndex] = std::make_pair(newSchedule[randomIndex].first,
                                                   std::make_pair(newTimeSlot, newInstructor));
 
-        // calculate the cost of the new schedule
         double currentCost = calculateScheduleCost(currentSchedule);
         double newCost = calculateScheduleCost(newSchedule);
 
-        // decide whether to accept the new schedule(If the new schedule has a lower cost, it is
-        // always accepted,
-        //  otherwise the decision is made with a probability determined by the function
-        //  std::exp...)
         if (newCost < currentCost ||
             std::exp((currentCost - newCost) / temperature) > (double)std::rand() / RAND_MAX) {
             currentSchedule = newSchedule;
         }
 
-        // update the best schedule if the new schedule is better
         if (newCost < bestCost) {
             bestSchedule = newSchedule;
             bestCost = newCost;
         }
 
-        // cool down the temperature
         temperature *= 1 - coolingRate;
     }
 
