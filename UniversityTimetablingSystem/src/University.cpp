@@ -205,19 +205,19 @@ double University::calculateScheduleCost(
 
         auto availability = instructor.getAvailability();
         if (std::find(availability.begin(), availability.end(), timeSlot) == availability.end()) {
-            cost += 1000.0;
+            cost += 1000.0; // high penalty if instructor is not available
         }
 
         auto preferredTimeSlots = course.getPreferredTimeSlots();
         if (std::find(preferredTimeSlots.begin(), preferredTimeSlots.end(), timeSlot) ==
             preferredTimeSlots.end()) {
-            cost += 10.0;
+            cost += 10.0; // lower penalty if course is not in preferred time slot
         }
 
         auto preferredCourses = instructor.getPreferredCourses();
         if (std::find(preferredCourses.begin(), preferredCourses.end(), course) ==
             preferredCourses.end()) {
-            cost += 10.0;
+            cost += 10.0; // lower penalty if course is not in preferred time slot
         }
     }
     return cost;
@@ -227,6 +227,7 @@ double University::calculateScheduleCost(
 std::vector<std::pair<Course, std::pair<TimeSlot, Instructor>>> University::schedule() {
     std::srand(std::time(nullptr));
 
+    // initial schedule (random assignment)
     std::vector<std::pair<Course, std::pair<TimeSlot, Instructor>>> currentSchedule;
     for (const auto& course : courses) {
         TimeSlot timeSlot = timeSlots[std::rand() % timeSlots.size()];
@@ -234,14 +235,17 @@ std::vector<std::pair<Course, std::pair<TimeSlot, Instructor>>> University::sche
         currentSchedule.emplace_back(course, std::make_pair(timeSlot, instructor));
     }
 
-    double temperature = 1200.0;
-    double coolingRate = 0.005;
-    double minTemperature = 1.0;
+    // parameters for simulated annealing
+    double temperature = 1200.0; // temperature allows for many combinations
+    double coolingRate = 0.005; // moderately low to give the algorithm enough time to find the optimal solution
+    double minTemperature = 1.0; // so that the algorithm terminates when the probability of making
+    // worse decisions becomes very low
 
     auto bestSchedule = currentSchedule;
     double bestCost = calculateScheduleCost(bestSchedule);
 
     while (temperature > minTemperature) {
+        // we create a new "candidate" schedule by making a small change to the current schedule
         auto newSchedule = currentSchedule;
 
         int randomIndex = std::rand() % newSchedule.size();
@@ -250,19 +254,26 @@ std::vector<std::pair<Course, std::pair<TimeSlot, Instructor>>> University::sche
         newSchedule[randomIndex] = std::make_pair(newSchedule[randomIndex].first,
                                                   std::make_pair(newTimeSlot, newInstructor));
 
+        // calculate the cost of the new schedule
         double currentCost = calculateScheduleCost(currentSchedule);
         double newCost = calculateScheduleCost(newSchedule);
 
+        // decide whether to accept the new schedule(If the new schedule has a lower cost, it is
+        // always accepted,
+        //  otherwise the decision is made with a probability determined by the function
+        //  std::exp...)
         if (newCost < currentCost ||
             std::exp((currentCost - newCost) / temperature) > (double)std::rand() / RAND_MAX) {
             currentSchedule = newSchedule;
         }
 
+        // update the best schedule if the new schedule is better
         if (newCost < bestCost) {
             bestSchedule = newSchedule;
             bestCost = newCost;
         }
 
+        // cool down the temperature
         temperature *= 1 - coolingRate;
     }
 

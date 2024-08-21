@@ -47,11 +47,11 @@ def add_instructor(request):
             return HttpResponseBadRequest('Missing name')
 
         availability = process_availability(availability_data)
-        if availability is False:
+        if availability is None:
             return HttpResponseBadRequest('Invalid availability data')
 
         preferred_courses = process_preferred_courses(preferred_courses_data)
-        if preferred_courses is False:
+        if preferred_courses is None:
             return HttpResponseBadRequest('Invalid preferred courses data')
 
         if instructor_exists(name):
@@ -74,7 +74,7 @@ def process_availability(availability_data):
             University.END_TIME: slot[University.END_TIME]
         }
         if not all(time_slot.values()):
-            return False
+            return None
         availability.append(time_slot)
     return availability
 
