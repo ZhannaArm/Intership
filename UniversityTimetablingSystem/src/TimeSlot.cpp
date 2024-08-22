@@ -2,7 +2,7 @@
 
 TimeSlot::TimeSlot(const std::string& day_, const std::string& start_time,
                    const std::string& end_time)
-    : day(day_), startTime(start_time), endTime(end_time) {}
+        : day(day_), startTime(start_time), endTime(end_time) {}
 
 TimeSlot::TimeSlot(const TimeSlot& other)
     : day(other.day), startTime(other.startTime), endTime(other.endTime) {}

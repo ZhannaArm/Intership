@@ -75,7 +75,7 @@
  * TimeSlot>> scheduleMap.
  */
 class University {
-   private:
+private:
     std::vector<Course> courses;
     std::vector<Instructor> instructors;
     std::vector<TimeSlot> timeSlots;
@@ -84,9 +84,9 @@ class University {
     std::map<Course, std::pair<Instructor, TimeSlot>> scheduleMap;
 
     static double calculateScheduleCost(
-        const std::vector<std::pair<Course, std::pair<TimeSlot, Instructor>>>& schedule);
+            const std::vector<std::pair<Course, std::pair<TimeSlot, Instructor>>>& schedule);
 
-   public:
+public:
     void addCourse(const Course& course);
 
     void addInstructor(const Instructor& instructor);
@@ -123,7 +123,9 @@ class University {
 
     std::vector<std::pair<Course, std::pair<TimeSlot, Instructor>>> schedule();
 
-    json scheduleToJsonFormat() const;
+    json scheduleToJsonFormatSubproc() const;
+
+    std::vector<std::tuple<std::string, std::string, std::string>> scheduleToJsonFormat() const;
 
     void schedule_bruteForce();  // the second solution
 

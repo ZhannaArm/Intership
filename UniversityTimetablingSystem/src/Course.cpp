@@ -4,7 +4,7 @@
 #include <utility>
 
 Course::Course(const std::string& course_name, const std::vector<TimeSlot>& preferred_time_slots)
-    : courseName(course_name), preferredTimeSlots(preferred_time_slots) {}
+        : courseName(course_name), preferredTimeSlots(preferred_time_slots) {}
 
 Course::Course(const Course& other)
     : courseName(other.courseName), preferredTimeSlots(other.preferredTimeSlots) {}

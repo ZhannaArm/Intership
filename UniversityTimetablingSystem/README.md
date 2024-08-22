@@ -22,18 +22,18 @@ This project is designed to create a timetable for university courses, assigning
 ### Methods
 
 - **TimeSlot**
-    - `displayInfo()`: Prints time slot information.
+  - `displayInfo()`: Prints time slot information.
 - **Course**
-    - `displayInfo()`: Prints course information.
+  - `displayInfo()`: Prints course information.
 - **Instructor**
-    - `displayInfo()`: Prints instructor information.
+  - `displayInfo()`: Prints instructor information.
 - **University**
-    - `addCourse(course: Course)`: Adds a course to the university.
-    - `addInstructor(instructor: Instructor)`: Adds an instructor to the university.
-    - `addTimeSlot(timeSlot: TimeSlot)`: Adds a time slot to the university.
-    - `saveState()`: Saves the current state of the university to a file in JSON format.
-    - `loadState()`: Loads the state of the university from a file in JSON format.
-    - `schedule()`: Returns a timetable that satisfies all hard constraints and as many soft constraints as possible.
+  - `addCourse(course: Course)`: Adds a course to the university.
+  - `addInstructor(instructor: Instructor)`: Adds an instructor to the university.
+  - `addTimeSlot(timeSlot: TimeSlot)`: Adds a time slot to the university.
+  - `saveState()`: Saves the current state of the university to a file in JSON format.
+  - `loadState()`: Loads the state of the university from a file in JSON format.
+  - `schedule()`: Returns a timetable that satisfies all hard constraints and as many soft constraints as possible.
 
 ### Constraints
 
@@ -58,8 +58,9 @@ git submodule update --init --recursive
 ./build.sh release # Build the project in Release mode
 ./build.sh debug   # Build the project in Debug mode
 ```
-###Running the Project
+### Running the Project
 The project provides several commands to manage instructors, courses, and time slots, as well as to generate the schedule.
+
 
 #### **If you want to work with the program through the terminal, you can follow these steps:**
 #### Commands
@@ -82,32 +83,39 @@ The project provides several commands to manage instructors, courses, and time s
   ./UniversityTimetablingSystem --schedule
   ```
 
-####**If you want to work with the program over the network, open two terminals and write this in one of them:**
+#### **If you want to work with the program over the network, open three terminals and write this in one of them:**
   ```sh
   cd your-repository
   chmod +x run-server.sh #This only needs to be done once
   chmod +x run-frontend.sh #This only needs to be done once
+  python3 setup.py install #This needs to be written if there are no collections and they need to be created
+  chmod +x run-database.sh #This only needs to be done once
   ./run-server.sh
   ```
-And in the other this:
+Write this in the second terminal:
   ```sh
   cd your-repository
   ./run-frontend.sh
   ```
-###IMPORTANT
+Write this in the third terminal:
+  ```sh
+  cd your-repository
+  ./run-database.sh
+  ```
+### IMPORTANT
 You must add courses **BEFORE** you add instructors.
 
-####EXAMPLE with running the project through the terminal
+#### EXAMPLE with running the project through the terminal
 ```sh
-./run/UniversityTimetablingSystem --addTimeSlot Monday 11:00 14:00
-./run/UniversityTimetablingSystem --addTimeSlot Wednesday 14:00 16:00
-./run/UniversityTimetablingSystem --addTimeSlot Tuesday 11:00 13:00
-./run/UniversityTimetablingSystem --addCourse Mathematics --preferredTimeSlots Tuesday 11:00 13:00
-./run/UniversityTimetablingSystem --addCourse History --preferredTimeSlots Monday 10:00 12:00 Wednesday 13:00 15:00
-./run/UniversityTimetablingSystem --addCourse Physics --preferredTimeSlots Wednesday 14:00 16:00 Monday 11:00 14:00
-./run/UniversityTimetablingSystem --addInstructor James --preferredCourses Mathematics Physics
+./bin/UniversityTimetablingSystem --addTimeSlot Monday 11:00 14:00
+./bin/UniversityTimetablingSystem --addTimeSlot Wednesday 14:00 16:00
+./bin/UniversityTimetablingSystem --addTimeSlot Tuesday 11:00 13:00
+./bin/UniversityTimetablingSystem --addCourse Mathematics --preferredTimeSlots Tuesday 11:00 13:00
+./bin/UniversityTimetablingSystem --addCourse History --preferredTimeSlots Monday 10:00 12:00 Wednesday 13:00 15:00
+./bin/UniversityTimetablingSystem --addCourse Physics --preferredTimeSlots Wednesday 14:00 16:00 Monday 11:00 14:00
+./bin/UniversityTimetablingSystem --addInstructor James --preferredCourses Mathematics Physics
      --availability Monday 09:00 12:00 Wednesday 14:00 16:00 Tuesday 11:00 13:00
-./run/UniversityTimetablingSystem --addInstructor Sara --preferredCourses History --availability Monday 10:00 12:00
+./bin/UniversityTimetablingSystem --addInstructor Sara --preferredCourses History --availability Monday 10:00 12:00
      Wednesday 14:00 16:00 Friday 11:00 14:00
-./run/UniversityTimetablingSystem --schedule
+./bin/UniversityTimetablingSystem --schedule
 ```
