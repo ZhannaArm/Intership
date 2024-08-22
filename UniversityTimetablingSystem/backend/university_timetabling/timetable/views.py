@@ -307,8 +307,13 @@ def build_university(py_courses, py_instructors, py_time_slots):
 
 
 def generate_university_schedule(university):
-    schedule = university.schedule()
-    return university.scheduleToJsonFormat()
+    try:
+        schedule = university.schedule()
+        return university.scheduleToJsonFormat()
+    except Exception as e:
+        print("An error occurred while generating the schedule.")
+        traceback.print_exc()
+        return {"error": str(e)}
 
 
 @csrf_exempt
