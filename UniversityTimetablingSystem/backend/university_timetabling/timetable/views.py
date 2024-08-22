@@ -308,7 +308,7 @@ def build_university(py_courses, py_instructors, py_time_slots):
 
 def generate_university_schedule(university):
     schedule = university.schedule()
-    return university.scheduleToJsonFormatDB()
+    return university.scheduleToJsonFormat()
 
 
 @csrf_exempt

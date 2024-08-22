@@ -123,9 +123,9 @@ public:
 
     std::vector<std::pair<Course, std::pair<TimeSlot, Instructor>>> schedule();
 
-    json scheduleToJsonFormat() const;
+    json scheduleToJsonFormatSubproc() const;
 
-    std::vector<std::tuple<std::string, std::string, std::string>> scheduleToJsonFormatDB() const;
+    std::vector<std::tuple<std::string, std::string, std::string>> scheduleToJsonFormat() const;
 
     void schedule_bruteForce();  // the second solution
 
