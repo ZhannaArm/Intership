@@ -56,8 +56,6 @@ class UniversityIntegrationTest(TestCase):
         self.assertIsNotNone(course)
 
     def test_add_instructor(self):
-        self.client.post(reverse('add_course'), json.dumps(self.course_data),
-                         content_type='application/json')
         response = self.client.post(reverse('add_instructor'), json.dumps(self.instructor_data),
                                     content_type='application/json')
         self.assertEqual(response.status_code, 200)
@@ -81,3 +79,35 @@ class UniversityIntegrationTest(TestCase):
         self.assertIsNotNone(course_entry, 'Course Math not found in schedule')
         self.assertEqual(course_entry[1], 'Monday 09:00-11:00', 'Incorrect time slot for Math course')
         self.assertEqual(course_entry[2], 'James', 'Incorrect instructor for Math course')
+
+    def test_add_instructor_with_missing_name(self):
+        invalid_instructor_data = {
+            University.PREFERRED_COURSES: [{University.COURSE_NAME: 'Math',
+                                            University.PREFERRED_TIME_SLOTS: [{University.DAY: '',
+                                                                               University.START_TIME: '',
+                                                                               University.END_TIME: ''}]}],
+            University.AVAILABILITY: [{University.DAY: 'Monday', University.START_TIME: '09:00',
+                                       University.END_TIME: '11:00'}]
+        }
+
+        response = self.client.post(reverse('add_instructor'), json.dumps(invalid_instructor_data),
+                                    content_type='application/json')
+        self.assertEqual(response.status_code, 400)
+        self.assertIn('Missing name', response.content.decode())
+
+    def test_add_course_with_invalid_data(self):
+        invalid_course_data = {
+            University.PREFERRED_TIME_SLOTS: [{University.DAY: 'Monday', University.START_TIME: '09:00',
+                                               University.END_TIME: '11:00'}]
+        }
+
+        response = self.client.post(reverse('add_course'), json.dumps(invalid_course_data),
+                                    content_type='application/json')
+        self.assertEqual(response.status_code, 400)
+        self.assertIn('Missing name', response.content.decode())
+
+    def test_generate_schedule_with_empty_database(self):
+        response = self.client.post(reverse('schedule'))
+
+        self.assertEqual(response.status_code, 500)
+        self.assertIn('Time slots or instructors are empty', response.content.decode())
