@@ -227,6 +227,10 @@ double University::calculateScheduleCost(
 std::vector<std::pair<Course, std::pair<TimeSlot, Instructor>>> University::schedule() {
     std::srand(std::time(nullptr));
 
+    if (timeSlots.empty() || instructors.empty()) {
+        throw std::runtime_error("Time slots or instructors are empty");
+    }
+
     // initial schedule (random assignment)
     std::vector<std::pair<Course, std::pair<TimeSlot, Instructor>>> currentSchedule;
     for (const auto& course : courses) {
@@ -262,9 +266,16 @@ std::vector<std::pair<Course, std::pair<TimeSlot, Instructor>>> University::sche
         // always accepted,
         //  otherwise the decision is made with a probability determined by the function
         //  std::exp...)
-        if (newCost < currentCost ||
-            std::exp((currentCost - newCost) / temperature) > (double)std::rand() / RAND_MAX) {
-            currentSchedule = newSchedule;
+        if (temperature > 0) {
+            double acceptanceProbability = (newCost < currentCost) ? 1.0 :
+                                           std::exp((currentCost - newCost) / temperature);
+            if (newCost < currentCost || acceptanceProbability > (double)std::rand() / RAND_MAX) {
+                currentSchedule = newSchedule;
+            }
+        } else {
+            if (newCost < currentCost) {
+                currentSchedule = newSchedule;
+            }
         }
 
         // update the best schedule if the new schedule is better

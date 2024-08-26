@@ -88,8 +88,6 @@ def process_preferred_courses(preferred_courses_data):
             print("Error: Missing or empty course name in preferredCourses")
             return None
 
-        print(f"Processing course: {course_name}")
-
         course_doc = db.collection(University.COURSES).get(course_name)
         if not course_doc:
             print(f"Error: Course {course_name} does not exist in the database.")
@@ -307,8 +305,13 @@ def build_university(py_courses, py_instructors, py_time_slots):
 
 
 def generate_university_schedule(university):
-    schedule = university.schedule()
-    return university.scheduleToJsonFormat()
+    try:
+        schedule = university.schedule()
+        return university.scheduleToJsonFormat()
+    except Exception as e:
+        print("An error occurred while generating the schedule.")
+        traceback.print_exc()
+        return {"error": str(e)}
 
 
 @csrf_exempt
