@@ -4,10 +4,13 @@ set -e
 
 cd  backend
 
-if [ -d "env" ]; then
-    echo "Activating virtual environment..."
-    source env/bin/activate
+if [ ! -d "env" ]; then
+    echo "Virtual environment 'env' not found. Creating a new one..."
+    python3 -m venv env
 fi
+
+echo "Activating virtual environment..."
+source env/bin/activate
 
 echo "Making migrations..."
 python3 manage.py makemigrations
