@@ -83,12 +83,12 @@ def process_preferred_courses(preferred_courses_data):
     preferred_courses = []
     for course_data in preferred_courses_data:
         course_name = course_data.get(University.COURSE_NAME)
-        
+
         if not course_name:
             print("Error: Missing or empty course name in preferredCourses")
             return None
 
-        course_doc = db.collection(University.COURSES).get(course_name)
+        course_doc = courses_collection.get(course_name)
         if not course_doc:
             print(f"Error: Course {course_name} does not exist in the database.")
             return None
@@ -135,7 +135,8 @@ def add_course(request):
         preferred_time_slots_data = data.get(University.PREFERRED_TIME_SLOTS, [])
 
         if not name:
-            return HttpResponseBadRequest('Missing name')
+            return HttpResponseBadRequest(json.dumps({'error': 'Missing name'}),
+                                          content_type='application/json')
 
         if course_exists(name):
             return HttpResponseBadRequest('Course with this name already exists')
@@ -181,8 +182,10 @@ def add_time_slot(request):
             time_slot_key = f"{day}_{start_time}-{end_time}"
 
             if time_slot_exists(time_slot_key):
-                return HttpResponseBadRequest('Time slot with this key already exists')
-
+                return HttpResponseBadRequest(
+                    json.dumps({'error': 'Time slot with this key already exists'}),
+                    content_type='application/json'
+                )
             create_and_add_time_slot(time_slot_key, day, start_time, end_time)
 
         return JsonResponse({'status': 'Time Slot(s) added successfully'})
@@ -214,6 +217,10 @@ def generate_schedule(request):
         py_instructors = load_instructors(py_courses)
         py_time_slots = load_time_slots()
 
+        if not py_courses and not py_instructors and not py_time_slots:
+            error_data = {'error': 'No data available in the database'}
+            return HttpResponseBadRequest(json.dumps(error_data), content_type='application/json')
+
         university = build_university(py_courses, py_instructors, py_time_slots)
 
         schedule_data = generate_university_schedule(university)
@@ -224,7 +231,7 @@ def generate_schedule(request):
 
 
 def load_courses():
-    courses = list(db.collection(University.COURSES).all())
+    courses = list(courses_collection.all())
     py_courses = []
     for course in courses:
         course_name = course.get(University.COURSE_NAME)
@@ -244,7 +251,7 @@ def load_courses():
 
 
 def load_instructors(py_courses):
-    instructors = list(db.collection(University.INSTRUCTORS).all())
+    instructors = list(instructors_collection.all())
     py_instructors = []
     for instructor in instructors:
         name = instructor.get(University.NAME)
@@ -280,7 +287,7 @@ def load_instructors(py_courses):
 
 
 def load_time_slots():
-    time_slots = list(db.collection(University.TIME_SLOTS).all())
+    time_slots = list(timeslots_collection.all())
     py_time_slots = []
     for timeSlot in time_slots:
         day = timeSlot.get(University.DAY)
@@ -317,9 +324,12 @@ def generate_university_schedule(university):
 @csrf_exempt
 def show_university(request):
     try:
-        courses = list(db.collection(University.COURSES).all())
-        instructors = list(db.collection(University.INSTRUCTORS).all())
-        time_slots = list(db.collection(University.TIME_SLOTS).all())
+        courses = list(courses_collection.all())
+        instructors = list(instructors_collection.all())
+        time_slots = list(timeslots_collection.all())
+
+        if not courses and not instructors and not time_slots:
+            return HttpResponseBadRequest('No data available in the database')
 
         return JsonResponse({
             University.COURSES: courses,
